@@ -1,0 +1,35 @@
+{
+  "notes": "Somente fontes originais (repositorios). Nenhuma linha e importada do recomp.fyi.",
+  "autoDiscoverGitHubManifests": true,
+  "autoDiscoverMaxPages": 2,
+  "repositories": [
+    {
+      "host": "github",
+      "repo": "Zelda64Recomp/Zelda64Recomp",
+      "name": "The Legend of Zelda: Majora's Mask",
+      "kind": "recomp",
+      "curatedStatus": "released",
+      "curatedWindows": true,
+      "evidence": "https://github.com/Zelda64Recomp/Zelda64Recomp"
+    },
+    {
+      "host": "github",
+      "repo": "HarbourMasters/Shipwright",
+      "name": "The Legend of Zelda: Ocarina of Time",
+      "kind": "port",
+      "curatedStatus": "released",
+      "curatedWindows": true,
+      "evidence": "https://github.com/HarbourMasters/Shipwright/releases"
+    },
+    {
+      "host": "github",
+      "repo": "HarbourMasters/2ship2harkinian",
+      "name": "The Legend of Zelda: Majora's Mask (2 Ship 2 Harkinian)",
+      "kind": "port",
+      "curatedStatus": "released",
+      "curatedWindows": true,
+      "evidence": "https://github.com/HarbourMasters/2ship2harkinian/releases"
+    }
+  ],
+  "maxRepositoriesPerRun": 60
+}

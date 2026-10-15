@@ -1,0 +1,1453 @@
+{
+  "apps": [
+    {
+      "name": "Diablo / Hellfire",
+      "project": "DevilutionX",
+      "repository": "diasurgical/devilutionX",
+      "folderName": "Diablo-DevilutionX",
+      "tags": [
+        "pc",
+        "rpg",
+        "port",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://github.com/diasurgical.png?size=512"
+    },
+    {
+      "name": "The Elder Scrolls III: Morrowind",
+      "project": "OpenMW",
+      "repository": "OpenMW/openmw",
+      "folderName": "Morrowind-OpenMW",
+      "tags": [
+        "pc",
+        "rpg",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://steamcdn-a.akamaihd.net/steam/apps/22320/header.jpg"
+    },
+    {
+      "name": "Fallout",
+      "project": "Fallout 1 Community Edition",
+      "repository": "alexbatalov/fallout1-ce",
+      "folderName": "Fallout-Fallout1CE",
+      "tags": [
+        "pc",
+        "rpg",
+        "port",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://steamcdn-a.akamaihd.net/steam/apps/38400/header.jpg"
+    },
+    {
+      "name": "Fallout 2",
+      "project": "Fallout 2 Community Edition",
+      "repository": "alexbatalov/fallout2-ce",
+      "folderName": "Fallout2-Fallout2CE",
+      "tags": [
+        "pc",
+        "rpg",
+        "port",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://steamcdn-a.akamaihd.net/steam/apps/38410/header.jpg"
+    },
+    {
+      "name": "Heroes of Might and Magic II",
+      "project": "fheroes2",
+      "repository": "ihhub/fheroes2",
+      "folderName": "HeroesOfMightAndMagicII-Fheroes2",
+      "tags": [
+        "pc",
+        "strategy",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "SuperTux",
+      "project": "SuperTux",
+      "repository": "SuperTux/supertux",
+      "folderName": "SuperTux-SuperTux",
+      "tags": [
+        "pc",
+        "platformer",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/SuperTux.png?size=512",
+      "releaseAssetFilter": "win64-portable"
+    },
+    {
+      "name": "SuperTuxKart",
+      "project": "SuperTuxKart",
+      "repository": "supertuxkart/stk-code",
+      "folderName": "SuperTuxKart-SuperTuxKart",
+      "tags": [
+        "pc",
+        "racing",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/supertuxkart.png?size=512"
+    },
+    {
+      "name": "Mindustry",
+      "project": "Mindustry",
+      "repository": "Anuken/Mindustry",
+      "folderName": "Mindustry-Mindustry",
+      "tags": [
+        "pc",
+        "strategy",
+        "tower-defense",
+        "open-source"
+      ],
+      "appIconUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/1127400/header.jpg"
+    },
+    {
+      "name": "Warzone 2100",
+      "project": "Warzone 2100",
+      "repository": "Warzone2100/warzone2100",
+      "folderName": "Warzone2100-Warzone2100",
+      "tags": [
+        "pc",
+        "rts",
+        "strategy",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/Warzone2100.png?size=512"
+    },
+    {
+      "name": "FreeOrion",
+      "project": "FreeOrion",
+      "repository": "freeorion/freeorion",
+      "folderName": "FreeOrion-FreeOrion",
+      "tags": [
+        "pc",
+        "turn-based",
+        "strategy",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/freeorion.png?size=512"
+    },
+    {
+      "name": "Luanti",
+      "project": "Luanti",
+      "repository": "luanti-org/luanti",
+      "folderName": "Luanti-Luanti",
+      "tags": [
+        "pc",
+        "sandbox",
+        "engine",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/luanti-org.png?size=512"
+    },
+    {
+      "name": "The Powder Toy",
+      "project": "The Powder Toy",
+      "repository": "The-Powder-Toy/The-Powder-Toy",
+      "folderName": "ThePowderToy-ThePowderToy",
+      "tags": [
+        "pc",
+        "sandbox",
+        "physics",
+        "open-source"
+      ],
+      "appIconUrl": "https://cdn.akamai.steamstatic.com/steam/apps/1148350/header.jpg"
+    },
+    {
+      "name": "Dungeon Crawl Stone Soup",
+      "project": "DCSS",
+      "repository": "crawl/crawl",
+      "folderName": "DungeonCrawlStoneSoup-DCSS",
+      "tags": [
+        "pc",
+        "roguelike",
+        "rpg",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/crawl.png?size=512",
+      "releaseAssetFilter": "win32-tiles"
+    },
+    {
+      "name": "Cataclysm: Dark Days Ahead",
+      "project": "Cataclysm DDA",
+      "repository": "CleverRaven/Cataclysm-DDA",
+      "folderName": "CataclysmDarkDaysAhead-CDDA",
+      "tags": [
+        "pc",
+        "roguelike",
+        "survival",
+        "open-source"
+      ],
+      "appIconUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/2330750/header.jpg"
+    },
+    {
+      "name": "ScummVM",
+      "project": "ScummVM",
+      "repository": "scummvm/scummvm",
+      "folderName": "ScummVM-ScummVM",
+      "tags": [
+        "pc",
+        "adventure",
+        "engine",
+        "needs-game-files"
+      ],
+      "appIconUrl": "https://github.com/scummvm.png?size=512"
+    },
+    {
+      "name": "DOSBox Staging",
+      "project": "DOSBox Staging",
+      "repository": "dosbox-staging/dosbox-staging",
+      "folderName": "DOSBoxStaging-DOSBoxStaging",
+      "tags": [
+        "pc",
+        "dos",
+        "emulation",
+        "engine"
+      ],
+      "appIconUrl": "https://github.com/dosbox-staging.png?size=512"
+    },
+    {
+      "name": "mGBA",
+      "project": "mGBA",
+      "repository": "mgba-emu/mgba",
+      "folderName": "MGBA-MGBA",
+      "tags": [
+        "emulator",
+        "gba",
+        "gbc",
+        "gb",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/mgba-emu.png?size=512"
+    },
+    {
+      "name": "PCSX2",
+      "project": "PCSX2",
+      "repository": "PCSX2/pcsx2",
+      "folderName": "PCSX2-PCSX2",
+      "tags": [
+        "emulator",
+        "ps2",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/PCSX2.png?size=512"
+    },
+    {
+      "name": "DuckStation",
+      "project": "DuckStation",
+      "repository": "stenzek/duckstation",
+      "folderName": "DuckStation-DuckStation",
+      "tags": [
+        "emulator",
+        "ps1",
+        "windows"
+      ],
+      "appIconUrl": "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/duckstation-logo.png"
+    },
+    {
+      "name": "OpenTTD",
+      "project": "OpenTTD",
+      "repository": "OpenTTD/OpenTTD",
+      "folderName": "OpenTTD-OpenTTD",
+      "tags": [
+        "pc",
+        "strategy",
+        "simulation",
+        "open-source"
+      ],
+      "appIconUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/1536610/header.jpg"
+    },
+    {
+      "name": "RollerCoaster Tycoon 2",
+      "project": "OpenRCT2",
+      "repository": "OpenRCT2/OpenRCT2",
+      "folderName": "RollerCoasterTycoon2-OpenRCT2",
+      "tags": [
+        "pc",
+        "simulation",
+        "port",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/285330/header.jpg"
+    },
+    {
+      "name": "Chris Sawyer's Locomotion",
+      "project": "OpenLoco",
+      "repository": "OpenLoco/OpenLoco",
+      "folderName": "ChrisSawyerSLocomotion-OpenLoco",
+      "tags": [
+        "pc",
+        "simulation",
+        "port",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://github.com/OpenLoco.png?size=512"
+    },
+    {
+      "name": "Command & Conquer",
+      "project": "OpenRA",
+      "repository": "OpenRA/OpenRA",
+      "folderName": "CommandConquer-OpenRA",
+      "tags": [
+        "pc",
+        "strategy",
+        "rts",
+        "open-source"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "OpenHV",
+      "project": "OpenHV",
+      "repository": "OpenHV/OpenHV",
+      "folderName": "OpenHV-OpenHV",
+      "tags": [
+        "pc",
+        "strategy",
+        "rts",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/OpenHV.png?size=512"
+    },
+    {
+      "name": "Widelands",
+      "project": "Widelands",
+      "repository": "widelands/widelands",
+      "folderName": "Widelands-Widelands",
+      "tags": [
+        "pc",
+        "strategy",
+        "rts",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/widelands.png?size=512"
+    },
+    {
+      "name": "Unciv",
+      "project": "Unciv",
+      "repository": "yairm210/Unciv",
+      "folderName": "Unciv-Unciv",
+      "tags": [
+        "pc",
+        "strategy",
+        "turn-based",
+        "open-source"
+      ],
+      "appIconUrl": "https://raw.githubusercontent.com/yairm210/Unciv/master/docs/assets/Icon.png"
+    },
+    {
+      "name": "Heroes of Might and Magic III",
+      "project": "VCMI",
+      "repository": "vcmi/vcmi",
+      "folderName": "HeroesOfMightAndMagicIII-VCMI",
+      "tags": [
+        "pc",
+        "strategy",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://github.com/vcmi.png?size=512"
+    },
+    {
+      "name": "Theme Hospital",
+      "project": "CorsixTH",
+      "repository": "CorsixTH/CorsixTH",
+      "folderName": "ThemeHospital-CorsixTH",
+      "tags": [
+        "pc",
+        "simulation",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "Ultima VII",
+      "project": "Exult",
+      "repository": "exult/exult",
+      "folderName": "UltimaVII-Exult",
+      "tags": [
+        "pc",
+        "rpg",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://github.com/exult.png?size=512"
+    },
+    {
+      "name": "Baldur's Gate / Infinity Engine",
+      "project": "GemRB",
+      "repository": "gemrb/gemrb",
+      "folderName": "BaldurSGateInfinityEngine-GemRB",
+      "tags": [
+        "pc",
+        "rpg",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "Arx Fatalis",
+      "project": "Arx Libertatis",
+      "repository": "arx/ArxLibertatis",
+      "folderName": "ArxFatalis-ArxLibertatis",
+      "tags": [
+        "pc",
+        "rpg",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/1700/header.jpg"
+    },
+    {
+      "name": "Jedi Academy / Jedi Outcast",
+      "project": "OpenJK",
+      "repository": "JACoders/OpenJK",
+      "folderName": "JediAcademyJediOutcast-OpenJK",
+      "tags": [
+        "pc",
+        "action",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://steamcdn-a.akamaihd.net/steam/apps/6020/header.jpg"
+    },
+    {
+      "name": "Return to Castle Wolfenstein",
+      "project": "iortcw",
+      "repository": "iortcw/iortcw",
+      "folderName": "ReturnToCastleWolfenstein-Iortcw",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/9010/header.jpg"
+    },
+    {
+      "name": "DOOM 3",
+      "project": "dhewm3",
+      "repository": "dhewm/dhewm3",
+      "folderName": "DOOM3-Dhewm3",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://cdn.akamai.steamstatic.com/steam/apps/208200/header.jpg"
+    },
+    {
+      "name": "DOOM 3 BFG Edition",
+      "project": "RBDOOM-3-BFG",
+      "repository": "RBDOOM-3-BFG/RBDOOM-3-BFG",
+      "folderName": "DOOM3BFGEdition-RBDOOM3BFG",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://cdn.akamai.steamstatic.com/steam/apps/208200/header.jpg"
+    },
+    {
+      "name": "DOOM / DOOM II",
+      "project": "GZDoom",
+      "repository": "ZDoom/gzdoom",
+      "folderName": "DOOMDOOMII-GZDoom",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "needs-game-files"
+      ],
+      "appIconUrl": "https://github.com/ZDoom.png?size=512"
+    },
+    {
+      "name": "DOOM / DOOM II",
+      "project": "Chocolate Doom",
+      "repository": "chocolate-doom/chocolate-doom",
+      "folderName": "DOOMDOOMII-ChocolateDoom",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "needs-game-files"
+      ],
+      "appIconUrl": "https://github.com/chocolate-doom.png?size=512"
+    },
+    {
+      "name": "DOOM / DOOM II",
+      "project": "DSDA-Doom",
+      "repository": "dsda-doom/dsda-doom",
+      "folderName": "DOOMDOOMII-DSDADoom",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "needs-game-files"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "DOOM / DOOM II",
+      "project": "Crispy Doom",
+      "repository": "fabiangreffrath/crispy-doom",
+      "folderName": "DOOMDOOMII-CrispyDoom",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "needs-game-files"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "DOOM / DOOM II",
+      "project": "Woof",
+      "repository": "fabiangreffrath/woof",
+      "folderName": "DOOMDOOMII-Woof",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "needs-game-files"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "DOOM / DOOM II",
+      "project": "DOOM Retro",
+      "repository": "bradharding/doomretro",
+      "folderName": "DOOMDOOMII-DOOMRetro",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "needs-game-files"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "DOOM / DOOM II",
+      "project": "Eternity Engine",
+      "repository": "team-eternity/eternity",
+      "folderName": "DOOMDOOMII-EternityEngine",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "needs-game-files"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "DOOM / DOOM II",
+      "project": "Odamex",
+      "repository": "odamex/odamex",
+      "folderName": "DOOMDOOMII-Odamex",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "needs-game-files"
+      ],
+      "appIconUrl": "https://github.com/odamex.png?size=512"
+    },
+    {
+      "name": "Quake",
+      "project": "vkQuake",
+      "repository": "Novum/vkQuake",
+      "folderName": "Quake-VkQuake",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/2310/header.jpg"
+    },
+    {
+      "name": "Quake",
+      "project": "Ironwail",
+      "repository": "andrei-drexler/ironwail",
+      "folderName": "Quake-Ironwail",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/2310/header.jpg"
+    },
+    {
+      "name": "Quake II",
+      "project": "Yamagi Quake II",
+      "repository": "yquake2/yquake2",
+      "folderName": "QuakeII-YamagiQuakeII",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/2320/header.jpg"
+    },
+    {
+      "name": "Quake II",
+      "project": "Quake II RTX",
+      "repository": "NVIDIA/Q2RTX",
+      "folderName": "QuakeII-QuakeIIRTX",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/1089130/header.jpg"
+    },
+    {
+      "name": "Wolfenstein Enemy Territory",
+      "project": "ET Legacy",
+      "repository": "etlegacy/etlegacy",
+      "folderName": "WolfensteinEnemyTerritory-ETLegacy",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/etlegacy.png?size=512"
+    },
+    {
+      "name": "OpenSpades",
+      "project": "OpenSpades",
+      "repository": "yvt/openspades",
+      "folderName": "OpenSpades-OpenSpades",
+      "tags": [
+        "pc",
+        "fps",
+        "open-source"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "Half-Life Engine",
+      "project": "Xash3D FWGS",
+      "repository": "FWGS/xash3d-fwgs",
+      "folderName": "HalfLifeEngine-Xash3DFWGS",
+      "tags": [
+        "pc",
+        "fps",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://steamcdn-a.akamaihd.net/steam/apps/70/header.jpg"
+    },
+    {
+      "name": "RPG Maker 2000 / 2003",
+      "project": "EasyRPG Player",
+      "repository": "EasyRPG/Player",
+      "folderName": "RPGMaker20002003-EasyRPGPlayer",
+      "tags": [
+        "pc",
+        "rpg",
+        "engine",
+        "needs-game-files"
+      ],
+      "appIconUrl": "https://github.com/EasyRPG.png?size=512"
+    },
+    {
+      "name": "Tyrian",
+      "project": "OpenTyrian",
+      "repository": "opentyrian/opentyrian",
+      "folderName": "Tyrian-OpenTyrian",
+      "tags": [
+        "pc",
+        "shooter",
+        "port",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/opentyrian.png?size=512"
+    },
+    {
+      "name": "Duke Nukem II",
+      "project": "Rigel Engine",
+      "repository": "lethal-guitar/RigelEngine",
+      "folderName": "DukeNukemII-RigelEngine",
+      "tags": [
+        "pc",
+        "platformer",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": "https://github.com/lethal-guitar.png?size=512"
+    },
+    {
+      "name": "Commander Keen",
+      "project": "Commander Genius",
+      "repository": "gerstrong/Commander-Genius",
+      "folderName": "CommanderKeen-CommanderGenius",
+      "tags": [
+        "pc",
+        "platformer",
+        "engine",
+        "requires-original-files"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "Open Surge",
+      "project": "Open Surge",
+      "repository": "opensurge2d/opensurge",
+      "folderName": "OpenSurge-OpenSurge",
+      "tags": [
+        "pc",
+        "platformer",
+        "open-source"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "Solarus",
+      "project": "Solarus Engine",
+      "repository": "solarus-games/solarus",
+      "folderName": "Solarus-SolarusEngine",
+      "tags": [
+        "pc",
+        "adventure",
+        "engine",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/solarus-games.png?size=512"
+    },
+    {
+      "name": "ZQuest Classic",
+      "project": "ZQuest Classic",
+      "repository": "ZQuestClassic/ZQuestClassic",
+      "folderName": "ZQuestClassic-ZQuestClassic",
+      "tags": [
+        "pc",
+        "adventure",
+        "engine",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/ZQuestClassic.png?size=512"
+    },
+    {
+      "name": "Shattered Pixel Dungeon",
+      "project": "Shattered Pixel Dungeon",
+      "repository": "00-Evan/shattered-pixel-dungeon",
+      "folderName": "ShatteredPixelDungeon-ShatteredPixelDungeon",
+      "tags": [
+        "pc",
+        "roguelike",
+        "rpg",
+        "open-source"
+      ],
+      "appIconUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/1769170/header.jpg"
+    },
+    {
+      "name": "Brogue Community Edition",
+      "project": "BrogueCE",
+      "repository": "tmewett/BrogueCE",
+      "folderName": "BrogueCommunityEdition-BrogueCE",
+      "tags": [
+        "pc",
+        "roguelike",
+        "open-source"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "Cataclysm Bright Nights",
+      "project": "Cataclysm BN",
+      "repository": "cataclysmbnteam/Cataclysm-BN",
+      "folderName": "CataclysmBrightNights-CataclysmBN",
+      "tags": [
+        "pc",
+        "roguelike",
+        "survival",
+        "open-source"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "Endless Sky",
+      "project": "Endless Sky",
+      "repository": "endless-sky/endless-sky",
+      "folderName": "EndlessSky-EndlessSky",
+      "tags": [
+        "pc",
+        "space",
+        "rpg",
+        "open-source"
+      ],
+      "appIconUrl": "https://cdn.akamai.steamstatic.com/steam/apps/404410/header.jpg"
+    },
+    {
+      "name": "Naev",
+      "project": "Naev",
+      "repository": "naev/naev",
+      "folderName": "Naev-Naev",
+      "tags": [
+        "pc",
+        "space",
+        "rpg",
+        "open-source"
+      ],
+      "appIconUrl": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/598530/header.jpg"
+    },
+    {
+      "name": "Pioneer Space Sim",
+      "project": "Pioneer",
+      "repository": "pioneerspacesim/pioneer",
+      "folderName": "PioneerSpaceSim-Pioneer",
+      "tags": [
+        "pc",
+        "space",
+        "simulation",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/pioneerspacesim.png?size=512"
+    },
+    {
+      "name": "Colobot Gold Edition",
+      "project": "Colobot",
+      "repository": "colobot/colobot",
+      "folderName": "ColobotGoldEdition-Colobot",
+      "tags": [
+        "pc",
+        "strategy",
+        "simulation",
+        "open-source"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "DDNet",
+      "project": "DDNet",
+      "repository": "ddnet/ddnet",
+      "folderName": "DDNet-DDNet",
+      "tags": [
+        "pc",
+        "platformer",
+        "multiplayer",
+        "open-source"
+      ],
+      "appIconUrl": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/412220/header.jpg"
+    },
+    {
+      "name": "Teeworlds",
+      "project": "Teeworlds",
+      "repository": "teeworlds/teeworlds",
+      "folderName": "Teeworlds-Teeworlds",
+      "tags": [
+        "pc",
+        "platformer",
+        "multiplayer",
+        "open-source"
+      ],
+      "appIconUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/380840/header.jpg"
+    },
+    {
+      "name": "Rigs of Rods",
+      "project": "Rigs of Rods",
+      "repository": "RigsOfRods/rigs-of-rods",
+      "folderName": "RigsOfRods-RigsOfRods",
+      "tags": [
+        "pc",
+        "driving",
+        "simulation",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/RigsOfRods.png?size=512"
+    },
+    {
+      "name": "Open Rails",
+      "project": "Open Rails",
+      "repository": "openrails/openrails",
+      "folderName": "OpenRails-OpenRails",
+      "tags": [
+        "pc",
+        "simulation",
+        "train",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/openrails.png?size=512"
+    },
+    {
+      "name": "Simutrans",
+      "project": "Simutrans",
+      "repository": "simutrans/simutrans",
+      "folderName": "Simutrans-Simutrans",
+      "tags": [
+        "pc",
+        "simulation",
+        "transport",
+        "open-source"
+      ],
+      "appIconUrl": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/434520/header.jpg"
+    },
+    {
+      "name": "3D Pinball Space Cadet",
+      "project": "Space Cadet Pinball",
+      "repository": "k4zmu2a/SpaceCadetPinball",
+      "folderName": "3DPinballSpaceCadet-SpaceCadetPinball",
+      "tags": [
+        "pc",
+        "pinball",
+        "port",
+        "needs-game-files"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "FreeCol",
+      "project": "FreeCol",
+      "repository": "FreeCol/freecol",
+      "folderName": "FreeCol-FreeCol",
+      "tags": [
+        "pc",
+        "strategy",
+        "turn-based",
+        "open-source"
+      ],
+      "appIconUrl": "https://github.com/FreeCol.png?size=512"
+    },
+    {
+      "name": "Freeciv21",
+      "project": "Freeciv21",
+      "repository": "longturn/freeciv21",
+      "folderName": "Freeciv21-Freeciv21",
+      "tags": [
+        "pc",
+        "strategy",
+        "turn-based",
+        "open-source"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "RetroArch",
+      "project": "RetroArch",
+      "repository": "libretro/RetroArch",
+      "folderName": "RetroArch-RetroArch",
+      "tags": [
+        "emulator",
+        "multi-system",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/libretro.png?size=512"
+    },
+    {
+      "name": "Dolphin",
+      "project": "Dolphin",
+      "repository": "dolphin-emu/dolphin",
+      "folderName": "Dolphin-Dolphin",
+      "tags": [
+        "emulator",
+        "gamecube",
+        "wii",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/dolphin-emu.png?size=512"
+    },
+    {
+      "name": "PPSSPP",
+      "project": "PPSSPP",
+      "repository": "hrydgard/ppsspp",
+      "folderName": "PPSSPP-PPSSPP",
+      "tags": [
+        "emulator",
+        "psp",
+        "windows"
+      ],
+      "appIconUrl": "https://raw.githubusercontent.com/Nightmayr-snaps/ppsspp-snap/master/snap/gui/ppsspp.png"
+    },
+    {
+      "name": "RPCS3",
+      "project": "RPCS3",
+      "repository": "RPCS3/rpcs3",
+      "folderName": "RPCS3-RPCS3",
+      "tags": [
+        "emulator",
+        "ps3",
+        "windows",
+        "experimental"
+      ],
+      "appIconUrl": "https://github.com/RPCS3.png?size=512"
+    },
+    {
+      "name": "Vita3K",
+      "project": "Vita3K",
+      "repository": "Vita3K/Vita3K",
+      "folderName": "Vita3K-Vita3K",
+      "tags": [
+        "emulator",
+        "psvita",
+        "windows",
+        "experimental"
+      ],
+      "appIconUrl": "https://github.com/Vita3K.png?size=512"
+    },
+    {
+      "name": "xemu",
+      "project": "xemu",
+      "repository": "xemu-project/xemu",
+      "folderName": "Xemu-Xemu",
+      "tags": [
+        "emulator",
+        "xbox",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/xemu-project.png?size=512"
+    },
+    {
+      "name": "Cemu",
+      "project": "Cemu",
+      "repository": "cemu-project/Cemu",
+      "folderName": "Cemu-Cemu",
+      "tags": [
+        "emulator",
+        "wiiu",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/cemu-project.png?size=512"
+    },
+    {
+      "name": "Cxbx-Reloaded",
+      "project": "Cxbx-Reloaded",
+      "repository": "Cxbx-Reloaded/Cxbx-Reloaded",
+      "folderName": "CxbxReloaded-CxbxReloaded",
+      "tags": [
+        "emulator",
+        "xbox",
+        "windows",
+        "experimental"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "Flycast",
+      "project": "Flycast",
+      "repository": "flyinghead/flycast",
+      "folderName": "Flycast-Flycast",
+      "tags": [
+        "emulator",
+        "dreamcast",
+        "naomi",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/flyinghead.png?size=512"
+    },
+    {
+      "name": "Azahar",
+      "project": "Azahar",
+      "repository": "azahar-emu/azahar",
+      "folderName": "Azahar-Azahar",
+      "tags": [
+        "emulator",
+        "3ds",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/azahar-emu.png?size=512"
+    },
+    {
+      "name": "melonDS",
+      "project": "melonDS",
+      "repository": "melonDS-emu/melonDS",
+      "folderName": "MelonDS-MelonDS",
+      "tags": [
+        "emulator",
+        "nds",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/melonDS-emu.png?size=512"
+    },
+    {
+      "name": "DeSmuME",
+      "project": "DeSmuME",
+      "repository": "TASEmulators/desmume",
+      "folderName": "DeSmuME-DeSmuME",
+      "tags": [
+        "emulator",
+        "nds",
+        "windows"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "SameBoy",
+      "project": "SameBoy",
+      "repository": "LIJI32/SameBoy",
+      "folderName": "SameBoy-SameBoy",
+      "tags": [
+        "emulator",
+        "gb",
+        "gbc",
+        "windows"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "VisualBoyAdvance-M",
+      "project": "VBA-M",
+      "repository": "visualboyadvance-m/visualboyadvance-m",
+      "folderName": "VisualBoyAdvanceM-VBAM",
+      "tags": [
+        "emulator",
+        "gb",
+        "gba",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/visualboyadvance-m.png?size=512"
+    },
+    {
+      "name": "bsnes",
+      "project": "bsnes",
+      "repository": "bsnes-emu/bsnes",
+      "folderName": "Bsnes-Bsnes",
+      "tags": [
+        "emulator",
+        "snes",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/bsnes-emu.png?size=512"
+    },
+    {
+      "name": "Snes9x",
+      "project": "Snes9x",
+      "repository": "snes9xgit/snes9x",
+      "folderName": "Snes9x-Snes9x",
+      "tags": [
+        "emulator",
+        "snes",
+        "windows"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "Mesen 2",
+      "project": "Mesen 2",
+      "repository": "SourMesen/Mesen2",
+      "folderName": "Mesen2-Mesen2",
+      "tags": [
+        "emulator",
+        "nes",
+        "snes",
+        "gb",
+        "gba",
+        "windows"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "FCEUX",
+      "project": "FCEUX",
+      "repository": "TASEmulators/fceux",
+      "folderName": "FCEUX-FCEUX",
+      "tags": [
+        "emulator",
+        "nes",
+        "windows"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "MAME",
+      "project": "MAME",
+      "repository": "mamedev/mame",
+      "folderName": "MAME-MAME",
+      "tags": [
+        "emulator",
+        "arcade",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/mamedev.png?size=512"
+    },
+    {
+      "name": "FinalBurn Neo",
+      "project": "FinalBurn Neo",
+      "repository": "finalburnneo/FBNeo",
+      "folderName": "FinalBurnNeo-FinalBurnNeo",
+      "tags": [
+        "emulator",
+        "arcade",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/finalburnneo.png?size=512"
+    },
+    {
+      "name": "Ares",
+      "project": "ares",
+      "repository": "ares-emulator/ares",
+      "folderName": "Ares-Ares",
+      "tags": [
+        "emulator",
+        "multi-system",
+        "windows"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "BizHawk",
+      "project": "BizHawk",
+      "repository": "TASEmulators/BizHawk",
+      "folderName": "BizHawk-BizHawk",
+      "tags": [
+        "emulator",
+        "multi-system",
+        "windows"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "simple64",
+      "project": "simple64",
+      "repository": "simple64/simple64",
+      "folderName": "Simple64-Simple64",
+      "tags": [
+        "emulator",
+        "n64",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/simple64.png?size=512"
+    },
+    {
+      "name": "Rosalie's Mupen GUI",
+      "project": "RMG",
+      "repository": "Rosalie241/RMG",
+      "folderName": "RosalieSMupenGUI-RMG",
+      "tags": [
+        "emulator",
+        "n64",
+        "windows"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "Project64",
+      "project": "Project64",
+      "repository": "project64/project64",
+      "folderName": "Project64-Project64",
+      "tags": [
+        "emulator",
+        "n64",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/project64.png?size=512"
+    },
+    {
+      "name": "DOSBox-X",
+      "project": "DOSBox-X",
+      "repository": "joncampbell123/dosbox-x",
+      "folderName": "DOSBoxX-DOSBoxX",
+      "tags": [
+        "emulator",
+        "dos",
+        "windows"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "86Box",
+      "project": "86Box",
+      "repository": "86Box/86Box",
+      "folderName": "86Box-86Box",
+      "tags": [
+        "emulator",
+        "retro-pc",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/86Box.png?size=512"
+    },
+    {
+      "name": "Ruffle",
+      "project": "Ruffle",
+      "repository": "ruffle-rs/ruffle",
+      "folderName": "Ruffle-Ruffle",
+      "tags": [
+        "emulator",
+        "flash",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/ruffle-rs.png?size=512"
+    },
+    {
+      "name": "PCSX-Redux",
+      "project": "PCSX-Redux",
+      "repository": "grumpycoders/pcsx-redux",
+      "folderName": "PCSXRedux-PCSXRedux",
+      "tags": [
+        "emulator",
+        "ps1",
+        "windows",
+        "experimental"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "shadPS4",
+      "project": "shadPS4",
+      "repository": "shadps4-emu/shadPS4",
+      "folderName": "ShadPS4-ShadPS4",
+      "tags": [
+        "emulator",
+        "ps4",
+        "windows",
+        "experimental"
+      ],
+      "appIconUrl": "https://github.com/shadps4-emu.png?size=512"
+    },
+    {
+      "name": "Playnite",
+      "project": "Playnite",
+      "repository": "JosefNemec/Playnite",
+      "folderName": "Playnite-Playnite",
+      "tags": [
+        "tool",
+        "launcher",
+        "windows"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "Heroic Games Launcher",
+      "project": "Heroic",
+      "repository": "Heroic-Games-Launcher/HeroicGamesLauncher",
+      "folderName": "HeroicGamesLauncher-Heroic",
+      "tags": [
+        "tool",
+        "launcher",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/Heroic-Games-Launcher.png?size=512"
+    },
+    {
+      "name": "Pegasus Frontend",
+      "project": "Pegasus",
+      "repository": "mmatyas/pegasus-frontend",
+      "folderName": "PegasusFrontend-Pegasus",
+      "tags": [
+        "tool",
+        "frontend",
+        "windows"
+      ],
+      "appIconUrl": null
+    },
+    {
+      "name": "Prism Launcher",
+      "project": "Prism Launcher",
+      "repository": "PrismLauncher/PrismLauncher",
+      "folderName": "PrismLauncher-PrismLauncher",
+      "tags": [
+        "tool",
+        "minecraft",
+        "launcher",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/PrismLauncher.png?size=512"
+    },
+    {
+      "name": "Moonlight",
+      "project": "Moonlight Qt",
+      "repository": "moonlight-stream/moonlight-qt",
+      "folderName": "Moonlight-MoonlightQt",
+      "tags": [
+        "tool",
+        "streaming",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/moonlight-stream.png?size=512"
+    },
+    {
+      "name": "Sunshine",
+      "project": "Sunshine",
+      "repository": "LizardByte/Sunshine",
+      "folderName": "Sunshine-Sunshine",
+      "tags": [
+        "tool",
+        "streaming",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/LizardByte.png?size=512"
+    },
+    {
+      "name": "BepInEx",
+      "project": "BepInEx",
+      "repository": "BepInEx/BepInEx",
+      "folderName": "BepInEx-BepInEx",
+      "tags": [
+        "tool",
+        "modding",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/BepInEx.png?size=512"
+    },
+    {
+      "name": "Mod Organizer 2",
+      "project": "Mod Organizer 2",
+      "repository": "ModOrganizer2/modorganizer",
+      "folderName": "ModOrganizer2-ModOrganizer2",
+      "tags": [
+        "tool",
+        "modding",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/ModOrganizer2.png?size=512"
+    },
+    {
+      "name": "Vortex",
+      "project": "Vortex",
+      "repository": "Nexus-Mods/Vortex",
+      "folderName": "Vortex-Vortex",
+      "tags": [
+        "tool",
+        "modding",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/Nexus-Mods.png?size=512"
+    },
+    {
+      "name": "Reloaded II",
+      "project": "Reloaded II",
+      "repository": "Reloaded-Project/Reloaded-II",
+      "folderName": "ReloadedII-ReloadedII",
+      "tags": [
+        "tool",
+        "modding",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/Reloaded-Project.png?size=512"
+    },
+    {
+      "name": "Special K",
+      "project": "Special K",
+      "repository": "SpecialKO/SpecialK",
+      "folderName": "SpecialK-SpecialK",
+      "tags": [
+        "tool",
+        "modding",
+        "windows"
+      ],
+      "appIconUrl": "https://github.com/SpecialKO.png?size=512"
+    },
+    {
+      "name": "Ultimate ASI Loader",
+      "project": "Ultimate ASI Loader",
+      "repository": "ThirteenAG/Ultimate-ASI-Loader",
+      "folderName": "UltimateASILoader-UltimateASILoader",
+      "tags": [
+        "tool",
+        "modding",
+        "windows"
+      ],
+      "appIconUrl": null
+    }
+  ]
+}

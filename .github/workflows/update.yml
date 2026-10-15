@@ -1,0 +1,46 @@
+name: Atualizar listas Quiver
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 9 * * *' # 09:23 UTC; agendamento do GitHub pode atrasar
+
+permissions:
+  contents: write # somente para publicar os JSONs por commit
+
+concurrency:
+  group: quiver-recomps-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Testes locais
+        run: python -m unittest discover -s tests -v
+      - name: Atualizar JSONs por APIs oficiais
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        run: |
+          python scripts/update.py
+          python scripts/validate.py
+      - name: Publicar apenas se houve mudanca
+        run: |
+          git add output/*.json data/discovered_repos.json data/snapshot.json
+          if git diff --cached --quiet; then
+            echo "Nenhuma alteracao nas listas."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Atualizar projetos de recompilacao"
+          git push

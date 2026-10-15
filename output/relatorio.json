@@ -1,6 +1,928 @@
 {
   "summary": {
-    "state": "awaiting-first-online-run"
+    "playable_windows": 19,
+    "development": 16,
+    "combined_with_legacy": 149,
+    "tracked": 60,
+    "awaiting_first_check": 32,
+    "checked_this_run": 60,
+    "ignored": 25
   },
-  "projects": []
+  "projects": [
+    {
+      "host": "github",
+      "repo": "Almamu/CrashBandicootXS-decomp",
+      "status": "in-progress",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/Almamu/CrashBandicootXS-decomp"
+    },
+    {
+      "host": "github",
+      "repo": "Cyanoxide/odt-recomp",
+      "status": "exploring",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/Cyanoxide/odt-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "DerrickGold/ar-recomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/DerrickGold/ar-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "DevOldSchool/conkers-bfd-decomp",
+      "status": "in-progress",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/DevOldSchool/conkers-bfd-decomp"
+    },
+    {
+      "host": "github",
+      "repo": "GenryTheFox0/Project-2099",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/GenryTheFox0/Project-2099"
+    },
+    {
+      "host": "github",
+      "repo": "GiZcesi/OpenTricky",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/GiZcesi/OpenTricky"
+    },
+    {
+      "host": "github",
+      "repo": "HarbourMasters/2ship2harkinian",
+      "status": "released",
+      "type": [
+        "port"
+      ],
+      "manifest_from_author": false,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "2Ship-Battler-Bravo-Win64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/HarbourMasters/2ship2harkinian"
+    },
+    {
+      "host": "github",
+      "repo": "HarbourMasters/Shipwright",
+      "status": "released",
+      "type": [
+        "port"
+      ],
+      "manifest_from_author": false,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "SoH-Dewey-Alpha-Win64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/HarbourMasters/Shipwright"
+    },
+    {
+      "host": "github",
+      "repo": "Jorge262007/FFTARecomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "FFTARecomp-windows-x86_64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/Jorge262007/FFTARecomp"
+    },
+    {
+      "host": "github",
+      "repo": "Junior-Jones/Adventure-Island-II-NES-Static-Recomp",
+      "status": "complete",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "Adventure-Island-II-NES-Static-Recomp-1.0.0-Windows.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/Junior-Jones/Adventure-Island-II-NES-Static-Recomp"
+    },
+    {
+      "host": "github",
+      "repo": "Junior-Jones/Mega-Man-2-NES-Static-Recomp",
+      "status": "complete",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "Mega-Man-2-NES-Static-Recomp-1.2.0-Windows.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/Junior-Jones/Mega-Man-2-NES-Static-Recomp"
+    },
+    {
+      "host": "github",
+      "repo": "Junior-Jones/Top-Gear-SNES-Static-Recomp",
+      "status": "complete",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "Top-Gear-Definitive-Edition-2.0.0-Windows-x64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/Junior-Jones/Top-Gear-SNES-Static-Recomp"
+    },
+    {
+      "host": "github",
+      "repo": "KIexster/god-of-war-recomp",
+      "status": "in-progress",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/KIexster/god-of-war-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "Lordingard/SacredStonesRecomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "SacredStonesRecomp-0.1.13-win64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/Lordingard/SacredStonesRecomp"
+    },
+    {
+      "host": "github",
+      "repo": "NeonLightning/AC1Recomp",
+      "status": "exploring",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/NeonLightning/AC1Recomp"
+    },
+    {
+      "host": "github",
+      "repo": "NoRain211/doaxvb-re",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/NoRain211/doaxvb-re"
+    },
+    {
+      "host": "github",
+      "repo": "OpenRAC/rac-deadlocked-decomp",
+      "status": "in-progress",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/OpenRAC/rac-deadlocked-decomp"
+    },
+    {
+      "host": "github",
+      "repo": "OpenRAC/rac1-decomp",
+      "status": "in-progress",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/OpenRAC/rac1-decomp"
+    },
+    {
+      "host": "github",
+      "repo": "OpenRAC/rac3-uya-decomp",
+      "status": "in-progress",
+      "type": [
+        "decomp",
+        "port"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/OpenRAC/rac3-uya-decomp"
+    },
+    {
+      "host": "github",
+      "repo": "RE-Pepper/RE-Pepper",
+      "status": "paused",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/RE-Pepper/RE-Pepper"
+    },
+    {
+      "host": "github",
+      "repo": "ReGame-Labs/dcb_decomp",
+      "status": "complete",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/ReGame-Labs/dcb_decomp"
+    },
+    {
+      "host": "github",
+      "repo": "ReGame-Labs/dw3_decomp",
+      "status": "complete",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/ReGame-Labs/dw3_decomp"
+    },
+    {
+      "host": "github",
+      "repo": "Sergey004/FNAF1-Recomp-proj",
+      "status": "playable",
+      "type": [
+        "port"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/Sergey004/FNAF1-Recomp-proj"
+    },
+    {
+      "host": "github",
+      "repo": "TekRantGaming/earthworm-jim-hd-recompiled",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "EarthwormJimHD-v0.9.5-windows-x64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/TekRantGaming/earthworm-jim-hd-recompiled"
+    },
+    {
+      "host": "github",
+      "repo": "TheGh0stShip/BattleTanx",
+      "status": "in-progress",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/TheGh0stShip/BattleTanx"
+    },
+    {
+      "host": "github",
+      "repo": "TheGh0stShip/BattleTanx-Global-Assault",
+      "status": "complete",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/TheGh0stShip/BattleTanx-Global-Assault"
+    },
+    {
+      "host": "github",
+      "repo": "TheGh0stShip/BattleTanx-Global-Assault-PC-Port",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "BattleTanxGA-0.2.5-windows-x64-portable.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/TheGh0stShip/BattleTanx-Global-Assault-PC-Port"
+    },
+    {
+      "host": "github",
+      "repo": "ThisIsAkill/ChronoRET",
+      "status": "in-progress",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/ThisIsAkill/ChronoRET"
+    },
+    {
+      "host": "github",
+      "repo": "Wyrelade/DW2-PC",
+      "status": "complete",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "DW2-PC-windows-x64.zip"
+      ],
+      "classification": "ignored",
+      "evidence": "https://github.com/Wyrelade/DW2-PC"
+    },
+    {
+      "host": "github",
+      "repo": "Wyrelade/Digimon-World-2-Decomp",
+      "status": "complete",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/Wyrelade/Digimon-World-2-Decomp"
+    },
+    {
+      "host": "github",
+      "repo": "YuutaTsubasa/ChaotixRecompiled",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "ChaotixRecompiled-0.4.1-windows-x64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/YuutaTsubasa/ChaotixRecompiled"
+    },
+    {
+      "host": "github",
+      "repo": "YuutaTsubasa/Free-Riders-Recompiled",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "FreeRidersRecompiled-0.8.2-windows-x64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/YuutaTsubasa/Free-Riders-Recompiled"
+    },
+    {
+      "host": "github",
+      "repo": "Zelda64Recomp/Zelda64Recomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": false,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "Zelda64Recompiled-v1.2.2-Windows.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/Zelda64Recomp/Zelda64Recomp"
+    },
+    {
+      "host": "github",
+      "repo": "aknavj/scghost-recomp",
+      "status": "in-progress",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/aknavj/scghost-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "alondero/aerogauge-recomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "aerogauge-recomp-windows-x64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/alondero/aerogauge-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "andrebrumdev/gow2-recomp",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/andrebrumdev/gow2-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "antxiko/AleHop-disassembly",
+      "status": "complete",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/antxiko/AleHop-disassembly"
+    },
+    {
+      "host": "github",
+      "repo": "antxiko/AntarcticAdventure-disassembly",
+      "status": "complete",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/antxiko/AntarcticAdventure-disassembly"
+    },
+    {
+      "host": "github",
+      "repo": "antxiko/AthleticLand-disassembly",
+      "status": "complete",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/antxiko/AthleticLand-disassembly"
+    },
+    {
+      "host": "github",
+      "repo": "antxiko/Colt36-disassembly",
+      "status": "complete",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/antxiko/Colt36-disassembly"
+    },
+    {
+      "host": "github",
+      "repo": "antxiko/F1Spirit-disassembly",
+      "status": "complete",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/antxiko/F1Spirit-disassembly"
+    },
+    {
+      "host": "github",
+      "repo": "antxiko/Nemesis-disassembly",
+      "status": "complete",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/antxiko/Nemesis-disassembly"
+    },
+    {
+      "host": "github",
+      "repo": "antxiko/Pitfall-MSX-disassembly",
+      "status": "complete",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/antxiko/Pitfall-MSX-disassembly"
+    },
+    {
+      "host": "github",
+      "repo": "antxiko/TimePilot-disassembly",
+      "status": "complete",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/antxiko/TimePilot-disassembly"
+    },
+    {
+      "host": "github",
+      "repo": "antxiko/temptations-disassembly",
+      "status": "complete",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/antxiko/temptations-disassembly"
+    },
+    {
+      "host": "github",
+      "repo": "arelkair/wiiparty-recomp",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "wiipartyrecomp-offline-windows.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/arelkair/wiiparty-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "birabittoh/EternalSonataReprise",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "eternalsonata-v1.1.3-windows-x64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/birabittoh/EternalSonataReprise"
+    },
+    {
+      "host": "github",
+      "repo": "canersaka/Yakuza-Dead-Souls-EX",
+      "status": "in-progress",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/canersaka/Yakuza-Dead-Souls-EX"
+    },
+    {
+      "host": "github",
+      "repo": "catsandsoup/2Xtreme-recomp",
+      "status": "exploring",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/catsandsoup/2Xtreme-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "chrissotraidis/sunpad",
+      "status": "in-progress",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/chrissotraidis/sunpad"
+    },
+    {
+      "host": "github",
+      "repo": "doc-haz/infinite-undiscovery-recomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/doc-haz/infinite-undiscovery-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "dvilelaf/opendana",
+      "status": "released",
+      "type": [
+        "port"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "opendana-1.0.0-Windows-x86_64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/dvilelaf/opendana"
+    },
+    {
+      "host": "github",
+      "repo": "dyzz/srw64-recomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "Marchwind64-0.4.7-windows-x64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/dyzz/srw64-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "freefrank/LostOdysseyRecomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "LostOdysseyRecomp-windows-x64-v0.9.52.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/freefrank/LostOdysseyRecomp"
+    },
+    {
+      "host": "github",
+      "repo": "glinesbdev/mh3u-port",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/glinesbdev/mh3u-port"
+    },
+    {
+      "host": "github",
+      "repo": "holdmysocks/mcla-recomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/holdmysocks/mcla-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "idiazraz/ufe3-recomp",
+      "status": "in-progress",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/idiazraz/ufe3-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "james2doyle/ffta-recomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "FFTARecomp-v1.6-windows-x64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/james2doyle/ffta-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "jessetbh/VPW2Recomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/jessetbh/VPW2Recomp"
+    },
+    {
+      "host": "github",
+      "repo": "jessetbh/VPW64Recomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/jessetbh/VPW64Recomp"
+    }
+  ],
+  "not_yet_checked_repositories": [
+    "github:jessetbh/WCWnWoRevengeRecomp",
+    "github:jessetbh/WCWvsNWOWorldTourRecomp",
+    "github:jessetbh/WWFNoMercyRecomp",
+    "github:jessetbh/WWFWrestleMania2000Recomp",
+    "github:jjmhalew/A2RacerIIRE",
+    "github:jjmhalew/RampageRE",
+    "github:jjmhalew/SkipperRE",
+    "github:jjmhalew/WoodyRE",
+    "github:jlagedo/dreams-to-reality-re",
+    "github:kirklandsig/halo2-decompiled",
+    "github:linuxkafe/Utopia-SNES-Static-Recomp",
+    "github:literalynn/BurnoutDominatorReversed",
+    "github:lombyte-project/Lombyte",
+    "github:mscrnt/Sightline",
+    "github:nikolaygorb/ArmyOfTwoRecomp",
+    "github:nikolaygorb/PerfectDarkZeroRecomp",
+    "github:nikolaygorb/WetRecomp",
+    "github:novapowers0/BloodyRoar2Recomp",
+    "github:o0WhiteFox0o/SuperRobot-Vietnamese",
+    "github:portingpete/The-Darkness-Recomp",
+    "github:saulob/dragons-crown-pro-pc",
+    "github:saulob/geometry-wars-retro-evolved-2-recompiled",
+    "github:saulob/hard-corps-uprising-recompiled",
+    "github:seamuswilkie31-dev/pc-monsterhunter3-FFXI",
+    "github:sergiomanzur/issd-native",
+    "github:silentsudin/RoadTripAdventure-recomp",
+    "github:thiagordsfx/urban-reign-recomp",
+    "github:vonhoff/lemball-decomp",
+    "github:vs-sr-dev/3do-omf2097",
+    "github:vyanhursky/DefJamFFNY-recomp",
+    "github:whompay/FNCReborn",
+    "github:whompay/SaintsReborn"
+  ]
 }

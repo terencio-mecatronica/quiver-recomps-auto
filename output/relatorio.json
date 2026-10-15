@@ -1,12 +1,12 @@
 {
   "summary": {
-    "playable_windows": 19,
-    "development": 16,
-    "combined_with_legacy": 149,
-    "tracked": 60,
-    "awaiting_first_check": 32,
+    "playable_windows": 27,
+    "development": 22,
+    "combined_with_legacy": 163,
+    "tracked": 92,
+    "awaiting_first_check": 0,
     "checked_this_run": 60,
-    "ignored": 25
+    "ignored": 43
   },
   "projects": [
     {
@@ -889,40 +889,476 @@
       "matched_release_assets": [],
       "classification": "ignored",
       "evidence": "https://github.com/jessetbh/VPW64Recomp"
+    },
+    {
+      "host": "github",
+      "repo": "jessetbh/WCWnWoRevengeRecomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/jessetbh/WCWnWoRevengeRecomp"
+    },
+    {
+      "host": "github",
+      "repo": "jessetbh/WCWvsNWOWorldTourRecomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/jessetbh/WCWvsNWOWorldTourRecomp"
+    },
+    {
+      "host": "github",
+      "repo": "jessetbh/WWFNoMercyRecomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/jessetbh/WWFNoMercyRecomp"
+    },
+    {
+      "host": "github",
+      "repo": "jessetbh/WWFWrestleMania2000Recomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/jessetbh/WWFWrestleMania2000Recomp"
+    },
+    {
+      "host": "github",
+      "repo": "jjmhalew/A2RacerIIRE",
+      "status": "playable",
+      "type": [
+        "port"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/jjmhalew/A2RacerIIRE"
+    },
+    {
+      "host": "github",
+      "repo": "jjmhalew/RampageRE",
+      "status": "playable",
+      "type": [
+        "recomp",
+        "port"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/jjmhalew/RampageRE"
+    },
+    {
+      "host": "github",
+      "repo": "jjmhalew/SkipperRE",
+      "status": "released",
+      "type": [
+        "port"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "SkipperRE-v1.0.1-windows.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/jjmhalew/SkipperRE"
+    },
+    {
+      "host": "github",
+      "repo": "jjmhalew/WoodyRE",
+      "status": "released",
+      "type": [
+        "port"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/jjmhalew/WoodyRE"
+    },
+    {
+      "host": "github",
+      "repo": "jlagedo/dreams-to-reality-re",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/jlagedo/dreams-to-reality-re"
+    },
+    {
+      "host": "github",
+      "repo": "kirklandsig/halo2-decompiled",
+      "status": "in-progress",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/kirklandsig/halo2-decompiled"
+    },
+    {
+      "host": "github",
+      "repo": "linuxkafe/Utopia-SNES-Static-Recomp",
+      "status": "in-development",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/linuxkafe/Utopia-SNES-Static-Recomp"
+    },
+    {
+      "host": "github",
+      "repo": "literalynn/BurnoutDominatorReversed",
+      "status": "in-progress",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/literalynn/BurnoutDominatorReversed"
+    },
+    {
+      "host": "github",
+      "repo": "lombyte-project/Lombyte",
+      "status": "in-progress",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/lombyte-project/Lombyte"
+    },
+    {
+      "host": "github",
+      "repo": "mscrnt/Sightline",
+      "status": "in-progress",
+      "type": [
+        "port"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "Sightline-v0.2.0-win32.zip"
+      ],
+      "classification": "development",
+      "evidence": "https://github.com/mscrnt/Sightline"
+    },
+    {
+      "host": "github",
+      "repo": "nikolaygorb/ArmyOfTwoRecomp",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "Ao2-win64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/nikolaygorb/ArmyOfTwoRecomp"
+    },
+    {
+      "host": "github",
+      "repo": "nikolaygorb/PerfectDarkZeroRecomp",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "PDZrecomp-win64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/nikolaygorb/PerfectDarkZeroRecomp"
+    },
+    {
+      "host": "github",
+      "repo": "nikolaygorb/WetRecomp",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "wet-recomp-win64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/nikolaygorb/WetRecomp"
+    },
+    {
+      "host": "github",
+      "repo": "novapowers0/BloodyRoar2Recomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/novapowers0/BloodyRoar2Recomp"
+    },
+    {
+      "host": "github",
+      "repo": "o0WhiteFox0o/SuperRobot-Vietnamese",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/o0WhiteFox0o/SuperRobot-Vietnamese"
+    },
+    {
+      "host": "github",
+      "repo": "portingpete/The-Darkness-Recomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/portingpete/The-Darkness-Recomp"
+    },
+    {
+      "host": "github",
+      "repo": "saulob/dragons-crown-pro-pc",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "DragonsCrownProPC-v0.1.0-windows-x64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/saulob/dragons-crown-pro-pc"
+    },
+    {
+      "host": "github",
+      "repo": "saulob/geometry-wars-retro-evolved-2-recompiled",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "GeometryWarsRetroEvolved2-v0.3.0-windows-x64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/saulob/geometry-wars-retro-evolved-2-recompiled"
+    },
+    {
+      "host": "github",
+      "repo": "saulob/hard-corps-uprising-recompiled",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "HardCorpsUprising-v0.5.0-windows-x64.zip"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/saulob/hard-corps-uprising-recompiled"
+    },
+    {
+      "host": "github",
+      "repo": "seamuswilkie31-dev/pc-monsterhunter3-FFXI",
+      "status": "in-progress",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/seamuswilkie31-dev/pc-monsterhunter3-FFXI"
+    },
+    {
+      "host": "github",
+      "repo": "sergiomanzur/issd-native",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/sergiomanzur/issd-native"
+    },
+    {
+      "host": "github",
+      "repo": "silentsudin/RoadTripAdventure-recomp",
+      "status": "not-reported",
+      "type": [],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "RoadTripRecomp-0.2.3-Windows-x64-DLSS-XeSS-addon.zip",
+        "RoadTripRecomp-0.2.3-Windows-x64-portable.zip",
+        "RoadTripRecomp-0.2.3-Windows-x64.zip"
+      ],
+      "classification": "ignored",
+      "evidence": "https://github.com/silentsudin/RoadTripAdventure-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "thiagordsfx/urban-reign-recomp",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/thiagordsfx/urban-reign-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "vonhoff/lemball-decomp",
+      "status": "playable",
+      "type": [
+        "decomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/vonhoff/lemball-decomp"
+    },
+    {
+      "host": "github",
+      "repo": "vs-sr-dev/3do-omf2097",
+      "status": "in-progress",
+      "type": [
+        "port"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/vs-sr-dev/3do-omf2097"
+    },
+    {
+      "host": "github",
+      "repo": "vyanhursky/DefJamFFNY-recomp",
+      "status": "released",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "DefJamSetup-0.9.0-windows-x64.exe"
+      ],
+      "classification": "playable",
+      "evidence": "https://github.com/vyanhursky/DefJamFFNY-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "whompay/FNCReborn",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/whompay/FNCReborn"
+    },
+    {
+      "host": "github",
+      "repo": "whompay/SaintsReborn",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "ignored",
+      "evidence": "https://github.com/whompay/SaintsReborn"
     }
   ],
-  "not_yet_checked_repositories": [
-    "github:jessetbh/WCWnWoRevengeRecomp",
-    "github:jessetbh/WCWvsNWOWorldTourRecomp",
-    "github:jessetbh/WWFNoMercyRecomp",
-    "github:jessetbh/WWFWrestleMania2000Recomp",
-    "github:jjmhalew/A2RacerIIRE",
-    "github:jjmhalew/RampageRE",
-    "github:jjmhalew/SkipperRE",
-    "github:jjmhalew/WoodyRE",
-    "github:jlagedo/dreams-to-reality-re",
-    "github:kirklandsig/halo2-decompiled",
-    "github:linuxkafe/Utopia-SNES-Static-Recomp",
-    "github:literalynn/BurnoutDominatorReversed",
-    "github:lombyte-project/Lombyte",
-    "github:mscrnt/Sightline",
-    "github:nikolaygorb/ArmyOfTwoRecomp",
-    "github:nikolaygorb/PerfectDarkZeroRecomp",
-    "github:nikolaygorb/WetRecomp",
-    "github:novapowers0/BloodyRoar2Recomp",
-    "github:o0WhiteFox0o/SuperRobot-Vietnamese",
-    "github:portingpete/The-Darkness-Recomp",
-    "github:saulob/dragons-crown-pro-pc",
-    "github:saulob/geometry-wars-retro-evolved-2-recompiled",
-    "github:saulob/hard-corps-uprising-recompiled",
-    "github:seamuswilkie31-dev/pc-monsterhunter3-FFXI",
-    "github:sergiomanzur/issd-native",
-    "github:silentsudin/RoadTripAdventure-recomp",
-    "github:thiagordsfx/urban-reign-recomp",
-    "github:vonhoff/lemball-decomp",
-    "github:vs-sr-dev/3do-omf2097",
-    "github:vyanhursky/DefJamFFNY-recomp",
-    "github:whompay/FNCReborn",
-    "github:whompay/SaintsReborn"
-  ]
+  "not_yet_checked_repositories": []
 }

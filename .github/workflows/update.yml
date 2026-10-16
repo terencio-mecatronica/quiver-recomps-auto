@@ -6,7 +6,7 @@ on:
     - cron: '23 */4 * * *' # seis verificações por dia (UTC); GitHub pode atrasar
 
 permissions:
-  contents: write # somente para publicar os JSONs por commit
+  contents: write
 
 concurrency:
   group: quiver-recomps-update
@@ -30,6 +30,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+          STEAMGRIDDB_API_KEY: ${{ secrets.STEAMGRIDDB_API_KEY }}
         run: |
           python scripts/update.py
           python scripts/validate.py

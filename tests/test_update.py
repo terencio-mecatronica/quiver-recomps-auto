@@ -602,3 +602,104 @@ class Version32ArtworkTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Version321ArtworkTests(unittest.TestCase):
+    """v3.2.1: aceita artes oficiais frequentes e corrige o cache negativo."""
+
+    def test_banjo_icons_app_is_accepted(self):
+        tree = {"tree": [{"type": "blob", "path": "icons/app.png", "size": 76013}]}
+        self.assertEqual(update.choose_author_art(tree, "BanjoRecomp/BanjoRecomp"),
+                         "icons/app.png")
+
+    def test_aerogauge_named_icon_is_accepted(self):
+        tree = {"tree": [{"type": "blob", "path": "assets/aerogauge-icon.png", "size": 81670},
+                         {"type": "blob", "path": "docs/screenshots/hud.png", "size": 30000}]}
+        self.assertEqual(update.choose_author_art(tree, "alondero/aerogauge-recomp"),
+                         "assets/aerogauge-icon.png")
+
+    def test_nested_ares_resource_logo_is_accepted(self):
+        tree = {"tree": [{"type": "blob", "path": "ares/ares/resource/logo.png", "size": 11533}]}
+        self.assertEqual(update.choose_author_art(tree, "ares-emulator/ares"),
+                         "ares/ares/resource/logo.png")
+
+    def test_azahar_project_named_image_in_dist_is_accepted(self):
+        tree = {"tree": [{"type": "blob", "path": "dist/azahar.png", "size": 63245}]}
+        self.assertEqual(update.choose_author_art(tree, "azahar-emu/azahar"),
+                         "dist/azahar.png")
+
+    def test_random_ui_icon_and_third_party_stay_rejected(self):
+        tree = {"tree": [
+            {"type": "blob", "path": "assets/menu-icon.png", "size": 34000},
+            {"type": "blob", "path": "vendor/icons/app.png", "size": 23000},
+            {"type": "blob", "path": "project/other/resource/logo.png", "size": 23000},
+            {"type": "blob", "path": "docs/screenshots/cover.png", "size": 120000},
+            {"type": "blob", "path": "assets/avatar.png", "size": 14000}]}
+        self.assertIsNone(update.choose_author_art(tree, "owner/CorrectGame"))
+
+    def test_project_banner_beats_official_small_icon(self):
+        tree = {"tree": [
+            {"type": "blob", "path": "icons/app.png", "size": 82000},
+            {"type": "blob", "path": "assets/banner.png", "size": 320000}]}
+        self.assertEqual(update.choose_author_art(tree, "owner/Game"),
+                         "assets/banner.png")
+
+    def test_readme_html_logo_with_relative_file(self):
+        tree = {"tree": [{"type": "blob", "path": "resources/game-logo.webp", "size": 82000}]}
+        self.assertEqual(update.choose_readme_art(
+            '<p><img alt="Official Logo" src="resources/game-logo.webp"></p>', tree),
+            "resources/game-logo.webp")
+        self.assertIsNone(update.choose_readme_art(
+            '<img alt="Cover" src="https://other.example/cover.png">', tree))
+
+    def test_old_negative_cache_is_refreshed_but_positive_cache_is_kept(self):
+        from datetime import datetime, timezone
+        now = datetime(2026, 10, 16, tzinfo=timezone.utc)
+        cached = {
+            "owner/NoArt": {"url": None, "checked_at": now.isoformat()},
+            "owner/Art": {"url": "https://raw.githubusercontent.com/owner/Art/main/logo.png",
+                          "checked_at": now.isoformat()},
+        }
+        class ArtAPI:
+            def __init__(self): self.calls = []
+            def get(self, url, *, missing_ok=False):
+                self.calls.append(url)
+                if url.endswith("owner/NoArt"):
+                    return {"default_branch": "main"}
+                if "/git/trees/" in url:
+                    return {"tree": [{"type": "blob", "path": "icons/app.png", "size": 20000}]}
+                return {"encoding": "base64", "content": ""}
+        api = ArtAPI()
+        entries = [{"repository": "owner/NoArt", "appIconUrl": None},
+                   {"repository": "owner/Art", "appIconUrl": None}]
+        summary = update.populate_author_images(api, entries, {}, cached, now=now)
+        self.assertEqual(summary["scanned"], 1)
+        self.assertEqual(summary["negative_cache_invalidated"], 1)
+        self.assertEqual(entries[0]["appIconUrl"],
+                         "https://raw.githubusercontent.com/owner/NoArt/main/icons/app.png")
+        self.assertEqual(entries[1]["appIconUrl"], cached["owner/Art"]["url"])
+        self.assertEqual(cached["owner/NoArt"]["scanner_version"], update.ARTWORK_SCANNER_VERSION)
+        self.assertEqual(len(api.calls), 3)
+
+    def test_transient_failure_does_not_create_negative_cache(self):
+        class FailingAPI:
+            def get(self, url, *, missing_ok=False):
+                raise update.FetchFailure("network timeout")
+        cache = {}
+        summary = update.populate_author_images(FailingAPI(),
+            [{"repository": "owner/Game", "appIconUrl": None}], {}, cache)
+        self.assertEqual(summary["errors"], 1)
+        self.assertEqual(summary["scanned"], 0)
+        self.assertNotIn("owner/Game", cache)
+
+    def test_truncated_repo_tree_does_not_get_false_negative(self):
+        class API:
+            def get(self, url, *, missing_ok=False):
+                if "/git/trees/" in url:
+                    return {"tree": [], "truncated": True}
+                return {"default_branch": "main"}
+        cache = {}
+        r = update.populate_author_images(API(),
+            [{"repository": "owner/Game", "appIconUrl": None}], {}, cache)
+        self.assertEqual(r["errors"], 1)
+        self.assertNotIn("owner/Game", cache)

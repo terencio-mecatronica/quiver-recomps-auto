@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Quiver Recomps Auto v3.2.1: correcoes de arte, fila incremental e buscas a cada 4h.
+"""Quiver Recomps Auto v3.3: fallback SteamGridDB seguro, cache e buscas a cada 4h.
 
 Nenhuma consulta ao banco de dados recomp.fyi. O formato de manifesto e aberto
 (CC BY 4.0); os registros sao obtidos diretamente dos repositorios originais.
@@ -14,12 +14,13 @@ from pathlib import Path
 from datetime import datetime, timedelta, timezone
 import re
 import sys
+import unicodedata
 from typing import Any
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote, urlencode, unquote
+from urllib.parse import quote, urlencode, unquote, urlsplit
 from urllib.request import Request, urlopen
 
-__version__ = "3.2.1"
+__version__ = "3.3"
 BASE = Path(__file__).resolve().parents[1]
 WIN_STATUSES = {"playable", "released", "complete"}
 DEV_STATUSES = {"exploring", "in-progress", "paused"}
@@ -689,6 +690,201 @@ def populate_author_images(api: API, entries: list[dict], overrides: dict, cache
             "remaining_without_image": sum(not x.get("appIconUrl") for x in entries)}
 
 
+
+# SteamGridDB e apenas fallback. Nenhuma API key aparece em arquivos publicados.
+# Referencia: https://www.steamgriddb.com/api/v2
+SGDB_API_BASE = "https://www.steamgriddb.com/api/v2/"
+SGDB_RESOLVER_VERSION = 1
+SGDB_SKIP_TAGS = {"emulator", "tool", "launcher", "frontend", "modding", "library", "framework"}
+SGDB_SUFFIX = re.compile(
+    r"(?:[\s._:-]+(?:static[ -]?recomp(?:ilation)?|recompiled|recomp(?:iled)?|"
+    r"decomp(?:ilation)?|source[ -]?port|native[ -]?port|pc[ -]?port|"
+    r"windows[ -]?port|windows|win64|win32))+$", re.I)
+
+
+class SteamGridDBFailure(RuntimeError):
+    def __init__(self, code: int | None = None):
+        self.code = code
+        super().__init__(f"SteamGridDB indisponivel (HTTP {code})" if code else
+                         "SteamGridDB indisponivel (rede)")
+
+
+class SteamGridDBClient:
+    """API de leitura SteamGridDB; a chave nunca e logada nem serializada."""
+    def __init__(self, key: str):
+        self._key = key.strip()
+        if not self._key:
+            raise ValueError("Chave SteamGridDB ausente")
+
+    def get(self, path: str) -> dict | None:
+        if not (path.startswith(("search/autocomplete/", "grids/game/")) and
+                ".." not in path and len(path) <= 300):
+            raise ValueError("Caminho SteamGridDB nao permitido")
+        request = Request(SGDB_API_BASE + path,
+                          headers={"Authorization": "Bearer " + self._key,
+                                   "Accept": "application/json",
+                                   "User-Agent": "quiver-recomps-auto/3.3"})
+        try:
+            with urlopen(request, timeout=15) as response:
+                content = response.read(1_000_001)
+                if len(content) > 1_000_000:
+                    raise SteamGridDBFailure()
+                value = json.loads(content)
+                if not isinstance(value, dict):
+                    raise SteamGridDBFailure()
+                return value
+        except HTTPError as exc:
+            if exc.code == 404:
+                return None
+            raise SteamGridDBFailure(exc.code) from None
+        except (URLError, TimeoutError, ValueError, UnicodeError):
+            raise SteamGridDBFailure() from None
+
+
+def sgdb_normalize(value: str) -> str:
+    """Pontuacao e acentos nao influenciam match; sequencia de palavras sim."""
+    text = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii")
+    text = text.casefold().replace("&", " and ")
+    return " ".join(re.findall(r"[a-z0-9]+", text))
+
+
+def sgdb_title(entry: dict) -> str | None:
+    """Nunca busca por fragmentos, siglas ou nomes genericos inferidos da franquia."""
+    tags = {str(t).casefold() for t in entry.get("tags", [])}
+    if tags.intersection(SGDB_SKIP_TAGS):
+        return None
+    title = entry.get("name")
+    if not isinstance(title, str):
+        return None
+    title = title.strip()[:120]
+    title = SGDB_SUFFIX.sub("", title).strip(" :-_.,")
+    normalized = sgdb_normalize(title)
+    if (len(normalized) < 6 or len(normalized) > 85 or not re.search(r"[a-z]", normalized)
+            or normalized in {"recomp", "recompiled", "decomp", "launcher", "port"}):
+        return None
+    # Siglas sem titulo completo (Z3R, RE2 etc.) exigem mapeamento curado.
+    if len(normalized.split()) == 1 and normalized.isupper():
+        return None
+    return title
+
+
+def sgdb_image_url(value: Any) -> str | None:
+    """URLs fornecidas pela API: restringir a servidores de arte conhecidos."""
+    if not isinstance(value, str) or len(value) > 2048:
+        return None
+    parsed = urlsplit(value)
+    if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+        return None
+    host = parsed.hostname.lower()
+    if host == "s3.amazonaws.com":
+        allowed = parsed.path.startswith("/steamgriddb/")
+    else:
+        allowed = host == "steamgriddb.com" or host.endswith(".steamgriddb.com")
+    if not allowed or not re.search(r"\.(?:png|jpe?g|webp)(?:$|[?#])", value, re.I):
+        return None
+    return value
+
+
+def sgdb_lookup(client: Any, title: str) -> tuple[str, str | None, int | None]:
+    """Busca um unico jogo de nome exato e uma grid horizontal segura."""
+    found = client.get("search/autocomplete/" + quote(title, safe=""))
+    candidates = found.get("data", []) if isinstance(found, dict) else []
+    if not isinstance(candidates, list):
+        return "no_match", None, None
+    normalized = sgdb_normalize(title)
+    exact = {c["id"] for c in candidates
+             if isinstance(c, dict) and isinstance(c.get("id"), int)
+             and c["id"] > 0 and sgdb_normalize(str(c.get("name", ""))) == normalized}
+    if not exact:
+        return "no_match", None, None
+    if len(exact) != 1:
+        return "ambiguous", None, None
+    game_id = next(iter(exact))
+    path = (f"grids/game/{game_id}?dimensions=920x430,460x215&types=static"
+            "&nsfw=false&humor=false&epilepsy=false&limit=30")
+    images = client.get(path)
+    grids = images.get("data", []) if isinstance(images, dict) else []
+    if not isinstance(grids, list):
+        return "no_art", None, game_id
+    valid = [x for x in grids if isinstance(x, dict) and sgdb_image_url(x.get("url"))]
+    if not valid:
+        return "no_art", None, game_id
+    best = max(valid, key=lambda x: (int(x.get("score") or 0), int(x.get("id") or 0)))
+    return "success", sgdb_image_url(best["url"]), game_id
+
+
+def populate_steamgrid_images(client: Any, entries: list[dict], overrides: dict,
+                              author_cache: dict, sgdb_cache: dict,
+                              *, max_lookups: int = 25,
+                              now: datetime | None = None) -> dict:
+    """Integra SGDB sem substituir artes dos autores, overrides ou resultados curados.
+
+    Primeiro procura imagem no GitHub: so consulta SGDB apos ter checado esse
+    repositorio e confirmado ausencia de arte local. Resultados positivos e
+    negativos persistem no snapshot; falhas transitorias nao viram negativos.
+    """
+    stats = {"enabled": bool(client), "queries": 0, "matches": 0,
+             "applied": 0, "ambiguous": 0, "no_match": 0, "no_art": 0,
+             "errors": 0, "rate_limited": False, "pending": 0}
+    if not client:
+        return stats
+    if not isinstance(sgdb_cache, dict) or not isinstance(author_cache, dict):
+        raise ValueError("Cache SteamGridDB invalido")
+    now = now or datetime.now(timezone.utc)
+    expiration = now - timedelta(days=30)
+    queue = []
+    for entry in entries:
+        repo = entry.get("repository", "")
+        if (not isinstance(repo, str) or entry.get("repositorySource", "github") != "github"
+                or entry.get("appIconUrl") or artwork_explicitly_configured(entry, overrides)):
+            continue
+        # Uma arte do autor tem prioridade mesmo que ainda nao tenha sido pesquisada.
+        author = author_cache.get(repo)
+        if not isinstance(author, dict) or author.get("url") is not None:
+            continue
+        title = sgdb_title(entry)
+        if title is None:
+            continue
+        key = "github:" + repo
+        previous = sgdb_cache.get(key)
+        if (isinstance(previous, dict) and previous.get("version") == SGDB_RESOLVER_VERSION
+                and previous.get("title") == sgdb_normalize(title)):
+            if previous.get("status") == "success":
+                url = sgdb_image_url(previous.get("url"))
+                if url:
+                    entry["appIconUrl"] = url
+                    stats["applied"] += 1
+                    continue
+            try:
+                checked = datetime.fromisoformat(previous["checked_at"])
+                if checked.tzinfo is not None and checked >= expiration:
+                    continue
+            except (KeyError, ValueError, TypeError):
+                pass
+        queue.append((entry, key, title))
+    stats["pending"] = len(queue)
+    for entry, key, title in queue[:max(0, min(100, max_lookups))]:
+        try:
+            status, url, game_id = sgdb_lookup(client, title)
+            stats["queries"] += 1
+        except SteamGridDBFailure as exc:
+            stats["errors"] += 1
+            if exc.code in (401, 403, 429):
+                stats["rate_limited"] = exc.code == 429
+                stats["auth_error"] = exc.code in (401, 403)
+                break
+            continue
+        if status == "success":
+            entry["appIconUrl"] = url
+            stats["matches"] += 1
+            stats["applied"] += 1
+        elif status in ("ambiguous", "no_match", "no_art"):
+            stats[status] += 1
+        sgdb_cache[key] = {"version": SGDB_RESOLVER_VERSION, "title": sgdb_normalize(title),
+                           "status": status, "url": url if status == "success" else None,
+                           "game_id": game_id, "checked_at": now.isoformat()}
+    return stats
+
 def make_entry(host: str, repo: str, record: dict, meta: dict, overrides: dict) -> tuple[dict | None, str, dict]:
     source_manifest = record.get("manifest")
     seed = record.get("seed") or {}
@@ -749,7 +945,7 @@ def dedupe_entries(entries: list[dict]) -> list[dict]:
     return results
 
 
-def regenerate(api: API, base: Path, *, discovery: bool = True) -> dict:
+def regenerate(api: API, base: Path, *, discovery: bool = True, sgdb_client: Any = None) -> dict:
     config = read_json(base / "config/sources.json")
     overrides = read_json(base / "config/overrides.json")
     excluded = set(overrides.get("excludedRepositories", []))
@@ -893,6 +1089,10 @@ def regenerate(api: API, base: Path, *, discovery: bool = True) -> dict:
     image_stats = populate_author_images(
         api, combined, overrides, artwork_cache,
         max_scans=max(0, min(80, int(config.get("maxArtworkScansPerRun", 30)))), now=now)
+    sgdb_cache = snapshot.get("steamgriddb", {})
+    sgdb_stats = populate_steamgrid_images(
+        sgdb_client, combined, overrides, artwork_cache, sgdb_cache,
+        max_lookups=max(0, min(80, int(config.get("maxSteamGridDBLookupsPerRun", 25)))), now=now)
     artwork_lookup = {(e.get("repositorySource", "github"), e.get("repository")): e.get("appIconUrl")
                       for e in combined}
     for item in [*playable, *developing]:
@@ -917,6 +1117,7 @@ def regenerate(api: API, base: Path, *, discovery: bool = True) -> dict:
                                        "ignored": sum(i.get("classification") not in ("playable", "development") for i in audit),
                                        "with_images": sum(bool(a.get("appIconUrl")) for a in combined),
                                        "image_discovery": image_stats,
+                                       "steamgriddb": sgdb_stats,
                                        "review_candidates": len(review),
                                        "search": search_stats},
                            "projects": audit,
@@ -929,6 +1130,7 @@ def regenerate(api: API, base: Path, *, discovery: bool = True) -> dict:
                                           "search_cycle": search_cycle + int(search_attempted),
                                           "manifest_retry_at": manifest_retry_at,
                                           "artwork": artwork_cache,
+                                          "steamgriddb": sgdb_cache,
                                           "repositories": dict(sorted(previous.items()))})
     retained = {(x["host"], x["repo"]) for x in cached}
     retained |= {(x["host"], x["repo"]) for x in discovered_valid}
@@ -943,8 +1145,12 @@ def main() -> int:
     parser.add_argument("--no-discovery", action="store_true", help="Somente repositorios configurados + cache")
     args = parser.parse_args()
     try:
+        sgdb_key = os.getenv("STEAMGRIDDB_API_KEY", "").strip()
+        sgdb = SteamGridDBClient(sgdb_key) if sgdb_key else None
+        if not sgdb:
+            print("AVISO: STEAMGRIDDB_API_KEY ausente; sem fallback de capas.", file=sys.stderr)
         info = regenerate(API(os.getenv("GITHUB_TOKEN", ""), os.getenv("GITLAB_TOKEN", "")), BASE,
-                          discovery=not args.no_discovery)
+                          discovery=not args.no_discovery, sgdb_client=sgdb)
     except (FetchFailure, OSError, ValueError, KeyError, TypeError) as ex:
         print(f"ERRO: publicacao cancelada; arquivos anteriores preservados. {ex}", file=sys.stderr)
         return 1

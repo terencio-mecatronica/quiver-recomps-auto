@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Quiver Recomps Auto v3.2: busca a cada 4h, fila incremental e capas oficiais.
+"""Quiver Recomps Auto v3.2.1: correcoes de arte, fila incremental e buscas a cada 4h.
 
 Nenhuma consulta ao banco de dados recomp.fyi. O formato de manifesto e aberto
 (CC BY 4.0); os registros sao obtidos diretamente dos repositorios originais.
@@ -19,7 +19,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlencode, unquote
 from urllib.request import Request, urlopen
 
-__version__ = "3.2"
+__version__ = "3.2.1"
 BASE = Path(__file__).resolve().parents[1]
 WIN_STATUSES = {"playable", "released", "complete"}
 DEV_STATUSES = {"exploring", "in-progress", "paused"}
@@ -462,14 +462,21 @@ def with_curated_images(entries: list[dict], settings: dict, *, legacy: bool = F
 
 
 
-# Apenas imagens PUBLICADAS PELO AUTOR dentro do repositório GitHub.
-# Não usa avatares, imagens de perfil, URLs de terceiros ou imagens
-# deduzidas do título do jogo; uma ausência de imagem é melhor que arte errada.
+# So usamos imagens publicadas no repositorio do proprio autor.
+# Evitamos imagens genericas de HUD/screenshots, perfis pessoais e fornecedores.
+ARTWORK_SCANNER_VERSION = 2  # invalida apenas caches negativos antigos
 ARTWORK_EXT = re.compile(r"\.(?:png|jpe?g|webp)$", re.I)
-ARTWORK_NAME = re.compile(r"^(?:cover|coverart|boxart|box-art|capsule|keyart|key-art|poster|banner|header|hero|splash|artwork|logo|icon)(?:[-_.][a-z0-9_-]+)?\.(?:png|jpe?g|webp)$", re.I)
-ARTWORK_DIRS = {"assets", "art", "artwork", "images", "img", "media", "resources", "res", "branding", "docs", "public", ".github"}
-ARTWORK_EXCLUDED = {"third_party", "third-party", "vendor", "external", "node_modules", "test", "tests", "examples", "samples", "dependencies", "deps", "packages"}
-ARTWORK_PRIORITY = ("cover", "coverart", "capsule", "keyart", "key-art", "boxart", "box-art", "poster", "banner", "header", "hero", "splash", "artwork", "logo", "icon")
+ARTWORK_DIRS = {"assets", "art", "artwork", "images", "img", "media", "resources",
+                "resource", "res", "branding", "docs", "public", ".github",
+                "icons", "icon", "dist"}
+ARTWORK_EXCLUDED = {"third_party", "third-party", "vendor", "external", "node_modules",
+                    "test", "tests", "examples", "samples", "dependencies", "deps", "packages",
+                    "screenshots", "screenshot", "thirdparty", "lib", "libs"}
+ARTWORK_PRIORITIES = {
+    "cover": 21, "coverart": 20, "capsule": 19, "keyart": 18, "boxart": 17,
+    "poster": 16, "banner": 15, "header": 14, "hero": 13, "splash": 12,
+    "artwork": 11, "logo": 9, "icon": 7,
+}
 
 
 def artwork_explicitly_configured(entry: dict, overrides: dict) -> bool:
@@ -477,67 +484,118 @@ def artwork_explicitly_configured(entry: dict, overrides: dict) -> bool:
     host = entry.get("repositorySource", "github")
     for key in (f"{host}:{repo}", repo):
         if key in overrides.get("images", {}):
-            return True  # inclusive null = remoção solicitada
+            return True  # inclusive null = remocao solicitada
         override = overrides.get("repositories", {}).get(key)
         if isinstance(override, dict) and "appIconUrl" in override:
             return True
     return False
 
 
-def choose_author_art(tree: dict) -> str | None:
-    """Seleciona somente capa/logo com nome explícito, dentro de caminho seguro."""
+def art_file(path: str, size: Any, *, repo: str = "") -> tuple[int, str] | None:
+    """Retorna score e caminho apenas para uma provavel arte de projeto.
+
+    Em monorepos, nomes genericos em pastas internas sem identidade do projeto
+    sao ignorados. Imagens do jogo nao sao inferidas de nomes aleatorios.
+    """
+    if (not isinstance(path, str) or not isinstance(size, int)
+            or not 1024 <= size <= 8_000_000 or len(path) > 240
+            or not ARTWORK_EXT.search(path)):
+        return None
+    parts = path.split("/")
+    if (not parts or any(part in ("", ".", "..") for part in parts)
+            or any(part.lower() in ARTWORK_EXCLUDED for part in parts[:-1])):
+        return None
+    dirs = [x.lower() for x in parts[:-1]]
+    file = parts[-1].lower()
+    stem = ARTWORK_EXT.sub("", file)
+    compact = re.sub(r"[^a-z0-9]", "", stem)
+    # Somente um token visual completo: "scoreboard" nao e box art,
+    # "login" nao e logo, "radar-icon" pode ser arte de interface.
+    tokens = [t for t in re.split(r"[-_. ]+", stem) if t]
+    score = 0
+    aliases = {"cover-art": "coverart", "box-art": "boxart", "key-art": "keyart"}
+    for tok in tokens:
+        score = max(score, ARTWORK_PRIORITIES.get(aliases.get(tok, tok), 0))
+    for kind, priority in ARTWORK_PRIORITIES.items():
+        if compact == kind or stem.startswith(kind + "-") or stem.startswith(kind + "_"):
+            score = max(score, priority)
+    project = repo.split("/")[-1].lower() if repo else ""
+    project_compact = re.sub(r"[^a-z0-9]", "", project)
+    project_tokens = [x for x in re.split(r"[^a-z0-9]+", project) if len(x) >= 5]
+    # So confiar no prefixo de projeto quando ha coincidencia clara.
+    project_match = bool(project and (
+        (len(project_compact) >= 5 and project_compact in compact)
+        or any(x in compact for x in project_tokens)
+    ))
+    path_project_match = bool(project and any(
+        re.sub(r"[^a-z0-9]", "", x) == project_compact for x in dirs))
+    in_art_dir = bool(dirs and dirs[0] in ARTWORK_DIRS)
+    nested_author_art = bool(dirs and dirs[-1] in ARTWORK_DIRS and path_project_match)
+    if not in_art_dir and not nested_author_art and len(dirs) != 0:
+        return None
+    # Evitar "health-icon.png" e elementos da interface. Aceitar por nome
+    # especifico do projeto ou genericos oficiais (app/game/project/launcher).
+    generic = stem in {"app", "application", "game", "project", "launcher", "main"}
+    if score == 0:
+        if project_match and (in_art_dir or nested_author_art):
+            score = 6  # ex.: dist/azahar.png
+        elif generic and dirs and dirs[-1] in {"icons", "icon", "branding", "assets", "dist", "resources", "resource", "res"}:
+            score = 6  # ex.: icons/app.png
+        else:
+            return None
+    if score <= 9 and not (project_match or path_project_match or stem in {
+        "logo", "icon", "app", "app-icon", "app_icon", "game-icon", "game_icon",
+        "application-icon", "project-icon", "launcher-icon", "main-icon",
+        "project-logo", "app-logo", "game-logo", "launcher-logo"
+    }):
+        return None
+    if stem in {"icon", "logo"} and len(dirs) >= 3 and not path_project_match:
+        return None
+    # Foto real do autor, nao screenshots. Capa ganha de logo e icone.
+    return (score * 100 + (20 if project_match else 0)
+            - len(parts) * 2, path)
+
+
+def choose_author_art(tree: dict, repo: str = "") -> str | None:
+    """Seleciona cover/banner/logo/icone validos publicados no proprio repo."""
     if not isinstance(tree, dict):
         return None
-    best = (-1, "")
-    for file in tree.get("tree", []):
-        if not isinstance(file, dict) or file.get("type") != "blob":
+    best = (0, "")
+    for item in tree.get("tree", []):
+        if not isinstance(item, dict) or item.get("type") != "blob":
             continue
-        path = file.get("path", "")
-        size = file.get("size", 0)
-        if (not isinstance(path, str) or not isinstance(size, int) or
-                not 1024 <= size <= 8_000_000 or len(path) > 240):
-            continue
-        parts = path.split("/")
-        if (not parts or any(p in ("", ".", "..") for p in parts)
-                or any(p.lower() in ARTWORK_EXCLUDED for p in parts[:-1])):
-            continue
-        name = parts[-1].lower()
-        if (not ARTWORK_NAME.fullmatch(name)
-                or not ARTWORK_EXT.search(name)
-                or (len(parts) > 1 and parts[0].lower() not in ARTWORK_DIRS)):
-            continue
-        # Para diretórios genéricos docs/ e .github/, exigir subpasta de imagens.
-        if (len(parts) > 1 and parts[0].lower() in {"docs", ".github"}
-                and len(parts) > 2 and parts[1].lower() not in ARTWORK_DIRS):
-            continue
-        prefix = next((len(ARTWORK_PRIORITY)-i for i, v in enumerate(ARTWORK_PRIORITY)
-                       if name.startswith(v)), 1)
-        # Uma capa é mais útil que ícone de projeto; menos profundidade é melhor.
-        score = prefix * 100 - len(parts) * 3
-        if score > best[0] or (score == best[0] and path.lower() < best[1].lower()):
-            best = (score, path)
+        candidate = art_file(item.get("path"), item.get("size"), repo=repo)
+        if candidate and (candidate[0] > best[0] or
+                          candidate[0] == best[0] and candidate[1].lower() < best[1].lower()):
+            best = candidate
     return best[1] or None
 
 
-
 def choose_readme_art(readme: str, tree: dict) -> str | None:
-    """Usa imagem relativa destacada como capa/logo no README, se existir na árvore."""
+    """README explicito e arquivo existente sao mais confiaveis que heuristicas."""
     if not isinstance(readme, str) or not isinstance(tree, dict):
         return None
     files = {item.get("path"): item for item in tree.get("tree", [])
              if isinstance(item, dict) and item.get("type") == "blob"}
+    matches = []
+    # Markdown e HTML locais; URLs externas ou user uploads nao sao aceitos.
+    matches.extend((m.group(1), m.group(2)) for m in re.finditer(
+        r"!\[([^\]\n]{0,100})\]\(([^)\s]+)(?:\s+[^)]*)?\)", readme[:30000]))
+    for m in re.finditer(r"<img\b[^>]{0,600}>", readme[:30000], re.I):
+        tag = m.group(0)
+        src = re.search(r"\bsrc\s*=\s*['\"]([^'\"]+)['\"]", tag, re.I)
+        alt = re.search(r"\b(?:alt|title)\s*=\s*['\"]([^'\"]+)['\"]", tag, re.I)
+        if src and alt:
+            matches.append((alt.group(1), src.group(1)))
+    hints = {"cover": 21, "key art": 18, "box art": 17, "capsule": 19,
+             "banner": 15, "header": 14, "poster": 16, "hero": 13,
+             "artwork": 11, "splash": 12, "logo": 9, "icon": 7}
     best = (0, "")
-    pattern = re.compile(r"!\[([^\]\n]{1,100})\]\(([^)\s]+)(?:\s+[^)]*)?\)")
-    for match in pattern.finditer(readme[:30000]):
-        alt, path = match.groups()
-        alt = alt.lower()
-        hints = {"cover": 14, "key art": 13, "box art": 12, "capsule": 11,
-                 "banner": 10, "header": 9, "poster": 8, "hero": 7,
-                 "artwork": 6, "splash": 5, "logo": 4, "icon": 2}
-        rank = max((score for label, score in hints.items() if label in alt), default=0)
-        if not rank or path.startswith(("/", "http:", "https:", "data:", "//")):
+    for alt, value in matches:
+        rank = max((score for label, score in hints.items() if label in alt.lower()), default=0)
+        if not rank or value.startswith(("/", "http:", "https:", "data:", "//")):
             continue
-        path = unquote(path.split("?", 1)[0].split("#", 1)[0]).removeprefix("./")
+        path = unquote(value.split("?", 1)[0].split("#", 1)[0]).removeprefix("./")
         parts = path.split("/")
         if (any(part in ("", ".", "..") for part in parts)
                 or any(part.lower() in ARTWORK_EXCLUDED for part in parts[:-1])
@@ -552,7 +610,7 @@ def choose_readme_art(readme: str, tree: dict) -> str | None:
 
 
 def discover_author_art(api: API, repo: str) -> str | None:
-    """Um GET para metadados e um para árvore Git por candidato (sem baixar binários)."""
+    """Metadados/README/arvore Git do autor (sem baixar arquivos binarios)."""
     if not REPO.fullmatch(repo) or repo.count("/") != 1:
         return None
     meta = api.get(github_api(repo), missing_ok=True)
@@ -562,10 +620,10 @@ def discover_author_art(api: API, repo: str) -> str | None:
     if len(branch) > 120 or branch.startswith("/") or ".." in branch:
         return None
     tree = api.get(github_api(repo, "/git/trees/" + quote(branch, safe="") + "?recursive=1"), missing_ok=True)
-    # Quando o README sinaliza explicitamente uma capa, prefere-a a um logo
-    # genérico; as imagens externas e não presentes na árvore são ignoradas.
+    if isinstance(tree, dict) and tree.get("truncated"):
+        raise FetchFailure("Arvore Git incompleta; tenta novamente na proxima execucao")
     readme = get_readme(api, repo) if isinstance(tree, dict) else ""
-    path = choose_readme_art(readme, tree) or choose_author_art(tree)
+    path = choose_readme_art(readme, tree) or choose_author_art(tree, repo=repo)
     if not path:
         return None
     safe_path = "/".join(quote(piece, safe="-._~") for piece in path.split("/"))
@@ -574,14 +632,10 @@ def discover_author_art(api: API, repo: str) -> str | None:
 
 def populate_author_images(api: API, entries: list[dict], overrides: dict, cache: dict,
                            max_scans: int = 30, now: datetime | None = None) -> dict:
-    """Reaproveita cache e acrescenta capas autênticas gradualmente.
-
-    Uma falha da API de arte não interrompe a publicação dos apps: apenas deixa
-    o card sem imagem. A cada 14 dias reavalia URLs ausentes para detectar novas capas.
-    """
+    """Cache por algoritmo, retomada incremental e recheck apos 14 dias."""
     now = now or datetime.now(timezone.utc)
     if not isinstance(cache, dict):
-        raise ValueError("Cache de capas inválido")
+        raise ValueError("Cache de capas invalido")
     cutoff = now - timedelta(days=14)
     available = {}
     for entry in entries:
@@ -593,13 +647,18 @@ def populate_author_images(api: API, entries: list[dict], overrides: dict, cache
             continue
         available[repo] = True
     needs_check = []
+    invalidated = 0
     for repo in sorted(available, key=str.casefold):
         cached = cache.get(repo)
         try:
             checked = datetime.fromisoformat(cached["checked_at"]) if isinstance(cached, dict) else None
         except (ValueError, TypeError, KeyError):
             checked = None
-        if checked is None or checked.tzinfo is None or checked < cutoff:
+        negative_old = (isinstance(cached, dict) and cached.get("url") is None
+                        and cached.get("scanner_version", 0) < ARTWORK_SCANNER_VERSION)
+        if negative_old:
+            invalidated += 1
+        if checked is None or checked.tzinfo is None or checked < cutoff or negative_old:
             needs_check.append(repo)
     scanned = 0
     errors = 0
@@ -611,10 +670,11 @@ def populate_author_images(api: API, entries: list[dict], overrides: dict, cache
             errors += 1
             if "HTTP 429" in str(ex) or "HTTP 403" in str(ex):
                 rate_limited = True
-                break  # não insiste diante de limite da API
-            # Erros pontuais também têm respiro até nova varredura.
-            url = None
-        cache[repo] = {"url": url, "checked_at": now.isoformat()}
+                break  # nao insistir quando a API limitar
+            # Nao guardar erro de rede como prova de falta de imagem.
+            continue
+        cache[repo] = {"url": url, "checked_at": now.isoformat(),
+                       "scanner_version": ARTWORK_SCANNER_VERSION}
         scanned += 1
     applied = 0
     for entry in entries:
@@ -624,7 +684,9 @@ def populate_author_images(api: API, entries: list[dict], overrides: dict, cache
             entry["appIconUrl"] = cache[repo]["url"]
             applied += 1
     return {"scanned": scanned, "applied": applied, "errors": errors,
-            "rate_limited": rate_limited, "remaining_without_image": sum(not x.get("appIconUrl") for x in entries)}
+            "rate_limited": rate_limited, "negative_cache_invalidated": invalidated,
+            "still_to_scan": max(0, len(needs_check)-scanned),
+            "remaining_without_image": sum(not x.get("appIconUrl") for x in entries)}
 
 
 def make_entry(host: str, repo: str, record: dict, meta: dict, overrides: dict) -> tuple[dict | None, str, dict]:

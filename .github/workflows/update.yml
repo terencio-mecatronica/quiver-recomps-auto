@@ -3,7 +3,7 @@ name: Atualizar listas Quiver
 on:
   workflow_dispatch:
   schedule:
-    - cron: '23 9 * * *' # 09:23 UTC; agendamento do GitHub pode atrasar
+    - cron: '23 */4 * * *' # seis verificações por dia (UTC); GitHub pode atrasar
 
 permissions:
   contents: write # somente para publicar os JSONs por commit

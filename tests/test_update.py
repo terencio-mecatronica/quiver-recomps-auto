@@ -449,5 +449,156 @@ class Version31Tests(unittest.TestCase):
             self.assertEqual(update.read_json(base/"data/snapshot.json")["search_cycle"],2)
 
 
+
+class Version32ArtworkTests(unittest.TestCase):
+    """v3.2: imagens do autor, cache, limites e integracao do JSON."""
+
+    def test_artwork_selects_author_cover_over_logo_and_avatar(self):
+        tree = {"tree": [
+            {"type": "blob", "path": "assets/logo.png", "size": 9000},
+            {"type": "blob", "path": "docs/images/cover.webp", "size": 250000},
+            {"type": "blob", "path": "vendor/cover.png", "size": 250000},
+            {"type": "blob", "path": "assets/avatar.png", "size": 14000},
+            {"type": "blob", "path": "docs/test/cover.jpg", "size": 12000},
+            {"type": "blob", "path": "assets/banner.svg", "size": 3000},
+        ]}
+        self.assertEqual(update.choose_author_art(tree), "docs/images/cover.webp")
+
+    def test_readme_relative_cover_has_priority_and_file_must_exist(self):
+        tree={"tree":[
+            {"type":"blob", "path":"assets/logo.png", "size":10000},
+            {"type":"blob", "path":"images/project-banner.png", "size":30000}]}
+        text="## Game\n![Official cover](images/project-banner.png)\n![avatar](https://github.com/person.png)"
+        self.assertEqual(update.choose_readme_art(text,tree), "images/project-banner.png")
+        self.assertIsNone(update.choose_readme_art("![Cover](images/not-exist.png)",tree))
+        self.assertIsNone(update.choose_readme_art("![Cover](../private/cover.png)",tree))
+
+    def test_no_avatar_generic_screenshots_or_unsafe_paths(self):
+        tree = {"tree": [
+            {"type": "blob", "path": "assets/avatar.png", "size": 8000},
+            {"type": "blob", "path": "assets/screenshot.png", "size": 80000},
+            {"type": "blob", "path": "../cover.png", "size": 9000},
+            {"type": "blob", "path": "tests/cover.png", "size": 9000},
+            {"type": "blob", "path": "assets/icon.svg", "size": 9000},
+        ]}
+        self.assertIsNone(update.choose_author_art(tree))
+
+    def test_author_art_url_uses_repository_and_real_branch(self):
+        class API:
+            def __init__(self): self.calls=[]
+            def get(self, url, *, missing_ok=False):
+                self.calls.append(url)
+                if "/git/trees/" in url:
+                    return {"tree": [{"type": "blob", "path": "art/key-art.png", "size": 40000}]}
+                return {"default_branch": "release-v4"}
+        api = API()
+        self.assertEqual(update.discover_author_art(api, "owner/Game"),
+            "https://raw.githubusercontent.com/owner/Game/release-v4/art/key-art.png")
+        self.assertEqual(len(api.calls), 3)
+
+    def test_no_false_random_art_when_repository_has_none(self):
+        class API:
+            def get(self, url, *, missing_ok=False):
+                if "/git/trees/" in url:
+                    return {"tree": [{"type":"blob", "path":"README.md", "size":3000}]}
+                return {"default_branch":"main"}
+        self.assertIsNone(update.discover_author_art(API(), "owner/Game"))
+
+    def test_artwork_cache_avoids_repeated_api_and_respects_explicit_null(self):
+        from datetime import datetime, timezone
+        class API:
+            def __init__(self): self.calls=[]
+            def get(self, url, *, missing_ok=False):
+                self.calls.append(url)
+                if "/git/trees/" in url:
+                    return {"tree": [{"type":"blob", "path":"cover.png", "size":100000}]}
+                return {"default_branch":"main"}
+        api=API()
+        app={"repository":"owner/Game", "appIconUrl":None}
+        cache={}
+        t=datetime(2026,10,16,tzinfo=timezone.utc)
+        first=update.populate_author_images(api,[app],{},cache,max_scans=1,now=t)
+        self.assertEqual(first["scanned"],1)
+        self.assertIn("cover.png",app["appIconUrl"])
+        app["appIconUrl"]=None
+        second=update.populate_author_images(api,[app],{},cache,max_scans=1,now=t)
+        self.assertEqual(second["scanned"],0)
+        self.assertEqual(len(api.calls),3)
+        self.assertIn("cover.png",app["appIconUrl"])
+        app["appIconUrl"]=None
+        update.populate_author_images(api,[app],{"images":{"github:owner/Game": None}},cache,now=t)
+        self.assertIsNone(app["appIconUrl"])
+        self.assertEqual(len(api.calls),3)
+
+    def test_rate_limit_pauses_optional_artwork_without_breaking_catalog(self):
+        class API:
+            def get(self, url, *, missing_ok=False):
+                raise update.FetchFailure("HTTP 429 em https://api.github.com/repos/... ")
+        cache={}
+        entries=[{"repository":"owner/A", "appIconUrl":None},
+                 {"repository":"owner/B", "appIconUrl":None}]
+        summary=update.populate_author_images(API(),entries,{},cache)
+        self.assertTrue(summary["rate_limited"])
+        self.assertEqual(summary["scanned"],0)
+        self.assertEqual(cache,{})
+
+    def test_end_to_end_art_in_all_lists(self):
+        # Importa FakeAPI para manter a fixture original da v3.1.
+        with tempfile.TemporaryDirectory() as td:
+            base=Path(td)
+            for folder in ("data", "config", "output"): (base/folder).mkdir()
+            (base/"config/sources.json").write_text(json.dumps({
+                "repositories":[{"host":"github", "repo":"owner/Alpha", "name":"Alpha",
+                                  "kind":"port", "curatedStatus":"released", "curatedWindows":True}],
+                "autoDiscoverGitHubManifests":False,"maxArtworkScansPerRun":3}),encoding="utf-8")
+            (base/"config/overrides.json").write_text('{"repositories":{}}')
+            (base/"data/discovered_repos.json").write_text('{"repositories":[]}')
+            (base/"config/minha-lista-114.json").write_text('{"apps":[]}')
+            class ArtAPI(FakeAPI):
+                def get(self, url, *, missing_ok=False):
+                    if "/git/trees/" in url:
+                        return {"tree":[{"type":"blob", "path":"assets/cover.jpg", "size":200000}]}
+                    return super().get(url, missing_ok=missing_ok)
+            summary=update.regenerate(ArtAPI(),base,discovery=False)
+            url="https://raw.githubusercontent.com/owner/Alpha/main/assets/cover.jpg"
+            self.assertEqual(summary["with_images"],1)
+            self.assertEqual(summary["image_discovery"]["scanned"],1)
+            self.assertEqual(update.read_json(base/"output/windows-jogaveis.json")["apps"][0]["appIconUrl"],url)
+            self.assertEqual(update.read_json(base/"output/tudo-quiver.json")["apps"][0]["appIconUrl"],url)
+            self.assertEqual(update.read_json(base/"data/snapshot.json")["artwork"]["owner/Alpha"]["url"],url)
+
+    def test_code_search_http_429_cached_for_24_hours(self):
+        with tempfile.TemporaryDirectory() as td:
+            base=Path(td)
+            for folder in ("data", "config", "output"): (base/folder).mkdir()
+            (base/"config/sources.json").write_text(json.dumps({
+                "repositories":[],"autoDiscoverGitHubRepositories":False,
+                "autoDiscoverGitHubManifests":True}))
+            (base/"config/overrides.json").write_text('{"repositories":{}}')
+            (base/"data/discovered_repos.json").write_text('{"repositories":[]}')
+            (base/"config/minha-lista-114.json").write_text('{"apps":[]}')
+            class LimitedAPI:
+                github_token="test"
+                def __init__(self): self.calls=0
+                def get(self,url,*,missing_ok=False):
+                    if "/search/code?" in url:
+                        self.calls+=1
+                        raise update.FetchFailure("HTTP 429 em https://api.github.com/search/code")
+                    return None
+            api=LimitedAPI()
+            update.regenerate(api,base)
+            update.regenerate(api,base)
+            self.assertEqual(api.calls,1)
+            self.assertTrue(update.read_json(base/"data/snapshot.json")["manifest_retry_at"])
+
+    def test_v32_workflow_has_six_runs_and_manual_trigger(self):
+        workflow=(Path(__file__).resolve().parents[1]/".github/workflows/update.yml")
+        self.assertTrue(workflow.is_file())
+        data=workflow.read_text(encoding="utf-8")
+        self.assertIn("workflow_dispatch:",data)
+        self.assertIn("23 */4 * * *",data)
+        self.assertIn("git add output/*.json data/discovered_repos.json data/snapshot.json",data)
+
+
 if __name__ == "__main__":
     unittest.main()

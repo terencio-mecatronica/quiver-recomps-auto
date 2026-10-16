@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Quiver Recomps Auto v3.3: fallback SteamGridDB seguro, cache e buscas a cada 4h.
+"""Quiver Recomps Auto v3.3.1: melhores titulos SteamGridDB, mais buscas e cache seguro.
 
 Nenhuma consulta ao banco de dados recomp.fyi. O formato de manifesto e aberto
 (CC BY 4.0); os registros sao obtidos diretamente dos repositorios originais.
@@ -20,7 +20,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlencode, unquote, urlsplit
 from urllib.request import Request, urlopen
 
-__version__ = "3.3"
+__version__ = "3.3.1"
 BASE = Path(__file__).resolve().parents[1]
 WIN_STATUSES = {"playable", "released", "complete"}
 DEV_STATUSES = {"exploring", "in-progress", "paused"}
@@ -694,7 +694,7 @@ def populate_author_images(api: API, entries: list[dict], overrides: dict, cache
 # SteamGridDB e apenas fallback. Nenhuma API key aparece em arquivos publicados.
 # Referencia: https://www.steamgriddb.com/api/v2
 SGDB_API_BASE = "https://www.steamgriddb.com/api/v2/"
-SGDB_RESOLVER_VERSION = 1
+SGDB_RESOLVER_VERSION = 2  # refaz apenas negativos; preserva imagens positivas
 SGDB_SKIP_TAGS = {"emulator", "tool", "launcher", "frontend", "modding", "library", "framework"}
 SGDB_SUFFIX = re.compile(
     r"(?:[\s._:-]+(?:static[ -]?recomp(?:ilation)?|recompiled|recomp(?:iled)?|"
@@ -723,7 +723,7 @@ class SteamGridDBClient:
         request = Request(SGDB_API_BASE + path,
                           headers={"Authorization": "Bearer " + self._key,
                                    "Accept": "application/json",
-                                   "User-Agent": "quiver-recomps-auto/3.3"})
+                                   "User-Agent": "quiver-recomps-auto/3.3.1"})
         try:
             with urlopen(request, timeout=15) as response:
                 content = response.read(1_000_001)
@@ -748,12 +748,47 @@ def sgdb_normalize(value: str) -> str:
     return " ".join(re.findall(r"[a-z0-9]+", text))
 
 
-def sgdb_title(entry: dict) -> str | None:
-    """Nunca busca por fragmentos, siglas ou nomes genericos inferidos da franquia."""
+# Correspondencias pontuais baseadas nas descricoes dos repositorios originais,
+# e nao em similaridade de franquia. Nao mapear versoes ambíguas (ex.: GoldenEye XBLA
+# para a versao de N64). Mais titulos podem ser revisados em config/overrides.json.
+SGDB_VERIFIED_TITLES = {
+    "caiuscodes/boom-boom-rocket-xbla-pc-recomp": "Boom Boom Rocket",
+    "birabittoh/kameorepowered": "Kameo: Elements of Power",
+    "sciaschi/cbfd-recompiled": "Conker's Bad Fur Day",
+    "psxrestore/condemned2recomp": "Condemned 2: Bloodshot",
+    "bouchacha/darklands-plus": "Darklands",
+}
+
+
+def sgdb_title(entry: dict, overrides: dict | None = None) -> str | None:
+    """Nome confiavel do jogo original; nunca adivinha pelo nome de franquia.
+
+    Ordem: titulo manual aprovado > titulo verificado do repositorio > nome do
+    jogo existente no catalogo com apenas sufixos de compilacao removidos.
+    """
     tags = {str(t).casefold() for t in entry.get("tags", [])}
     if tags.intersection(SGDB_SKIP_TAGS):
         return None
-    title = entry.get("name")
+    repo = entry.get("repository", "")
+    host = entry.get("repositorySource", "github")
+    title = None
+    if isinstance(repo, str) and isinstance(overrides, dict):
+        titles = overrides.get("steamGridDBTitles", {})
+        if isinstance(titles, dict):
+            for key in (f"{host}:{repo}", repo):
+                if key in titles:
+                    candidate = titles[key]
+                    # null explicito significa nao associar automaticamente.
+                    if candidate is None:
+                        return None
+                    if not isinstance(candidate, str):
+                        return None
+                    title = candidate
+                    break
+    if title is None and isinstance(repo, str) and host == "github":
+        title = SGDB_VERIFIED_TITLES.get(repo.casefold())
+    if title is None:
+        title = entry.get("name")
     if not isinstance(title, str):
         return None
     title = title.strip()[:120]
@@ -762,8 +797,12 @@ def sgdb_title(entry: dict) -> str | None:
     if (len(normalized) < 6 or len(normalized) > 85 or not re.search(r"[a-z]", normalized)
             or normalized in {"recomp", "recompiled", "decomp", "launcher", "port"}):
         return None
-    # Siglas sem titulo completo (Z3R, RE2 etc.) exigem mapeamento curado.
-    if len(normalized.split()) == 1 and normalized.isupper():
+    # Siglas curtas ou opacas exigem associacao curada; "CBFD" nao implica
+    # automaticamente qualquer jogo da serie Conker.
+    compact = re.sub(r"[^A-Za-z0-9]", "", title)
+    if (len(normalized.split()) == 1 and compact.isupper()
+            and not any(ch.islower() for ch in title)
+            and len(compact) <= 6 and not compact.isdigit()):
         return None
     return title
 
@@ -815,7 +854,7 @@ def sgdb_lookup(client: Any, title: str) -> tuple[str, str | None, int | None]:
 
 def populate_steamgrid_images(client: Any, entries: list[dict], overrides: dict,
                               author_cache: dict, sgdb_cache: dict,
-                              *, max_lookups: int = 25,
+                              *, max_lookups: int = 50,
                               now: datetime | None = None) -> dict:
     """Integra SGDB sem substituir artes dos autores, overrides ou resultados curados.
 
@@ -825,7 +864,8 @@ def populate_steamgrid_images(client: Any, entries: list[dict], overrides: dict,
     """
     stats = {"enabled": bool(client), "queries": 0, "matches": 0,
              "applied": 0, "ambiguous": 0, "no_match": 0, "no_art": 0,
-             "errors": 0, "rate_limited": False, "pending": 0}
+             "errors": 0, "rate_limited": False, "pending": 0,
+             "negative_cache_invalidated": 0, "reused": 0}
     if not client:
         return stats
     if not isinstance(sgdb_cache, dict) or not isinstance(author_cache, dict):
@@ -842,25 +882,34 @@ def populate_steamgrid_images(client: Any, entries: list[dict], overrides: dict,
         author = author_cache.get(repo)
         if not isinstance(author, dict) or author.get("url") is not None:
             continue
-        title = sgdb_title(entry)
+        title = sgdb_title(entry, overrides)
         if title is None:
             continue
         key = "github:" + repo
         previous = sgdb_cache.get(key)
-        if (isinstance(previous, dict) and previous.get("version") == SGDB_RESOLVER_VERSION
-                and previous.get("title") == sgdb_normalize(title)):
-            if previous.get("status") == "success":
-                url = sgdb_image_url(previous.get("url"))
-                if url:
-                    entry["appIconUrl"] = url
+        if isinstance(previous, dict):
+            # Uma capa validada anteriormente nao pode desaparecer so porque o
+            # algoritmo de nomes mudou de versao. O autor e o override ainda
+            # prevalecem, pois sao verificados acima.
+            same_title = previous.get("title") == sgdb_normalize(title)
+            if previous.get("status") == "success" and same_title:
+                cached_url = sgdb_image_url(previous.get("url"))
+                if cached_url:
+                    entry["appIconUrl"] = cached_url
                     stats["applied"] += 1
+                    stats["reused"] += 1
                     continue
-            try:
-                checked = datetime.fromisoformat(previous["checked_at"])
-                if checked.tzinfo is not None and checked >= expiration:
-                    continue
-            except (KeyError, ValueError, TypeError):
-                pass
+            fresh_resolver = previous.get("version") == SGDB_RESOLVER_VERSION
+            if previous.get("status") in ("no_match", "no_art", "ambiguous"):
+                if not fresh_resolver or not same_title:
+                    stats["negative_cache_invalidated"] += 1
+                else:
+                    try:
+                        checked = datetime.fromisoformat(previous["checked_at"])
+                        if checked.tzinfo is not None and checked >= expiration:
+                            continue
+                    except (KeyError, ValueError, TypeError):
+                        pass
         queue.append((entry, key, title))
     stats["pending"] = len(queue)
     for entry, key, title in queue[:max(0, min(100, max_lookups))]:
@@ -1088,11 +1137,11 @@ def regenerate(api: API, base: Path, *, discovery: bool = True, sgdb_client: Any
     # cópias dos registros de playable/developing/legacy usados acima.
     image_stats = populate_author_images(
         api, combined, overrides, artwork_cache,
-        max_scans=max(0, min(80, int(config.get("maxArtworkScansPerRun", 30)))), now=now)
+        max_scans=max(0, min(80, int(config.get("maxArtworkScansPerRun", 50)))), now=now)
     sgdb_cache = snapshot.get("steamgriddb", {})
     sgdb_stats = populate_steamgrid_images(
         sgdb_client, combined, overrides, artwork_cache, sgdb_cache,
-        max_lookups=max(0, min(80, int(config.get("maxSteamGridDBLookupsPerRun", 25)))), now=now)
+        max_lookups=max(0, min(80, int(config.get("maxSteamGridDBLookupsPerRun", 50)))), now=now)
     artwork_lookup = {(e.get("repositorySource", "github"), e.get("repository")): e.get("appIconUrl")
                       for e in combined}
     for item in [*playable, *developing]:

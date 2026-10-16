@@ -834,7 +834,7 @@ class SteamGridDBVersion33Tests(unittest.TestCase):
 
     def test_full_generation_without_sgdb_remains_backward_compatible(self):
         # A chave e opcional: nenhuma consulta ao SGDB e feita nos testes legados.
-        self.assertEqual(update.__version__, "3.3")
+        self.assertEqual(update.__version__, "3.3.1")
 
 class Version33IntegrationTest(unittest.TestCase):
     def test_generator_publishes_sgdb_art_and_persists_cache(self):
@@ -868,3 +868,136 @@ class Version33IntegrationTest(unittest.TestCase):
             cache = update.read_json(base / "data/snapshot.json")["steamgriddb"]
             self.assertIn("github:owner/Game", cache)
             self.assertNotIn("STEAMGRIDDB_API_KEY", json.dumps(cache))
+
+class SteamGridDBVersion331Tests(unittest.TestCase):
+    """v3.3.1: titulos conferidos, reconsulta de negativos e preservacao do catalogo."""
+
+    def make_entry(self, repo, name, *, project=None):
+        return {"repository": repo, "name": name,
+                "project": project or name, "tags": ["recomp", "windows"],
+                "appIconUrl": None}
+
+    def author_cache(self, repo):
+        return {repo: {"url": None, "checked_at": "2026-10-16T10:00:00+00:00"}}
+
+    class FakeSGDB:
+        def __init__(self, games, url="https://cdn2.steamgriddb.com/grid/good.png"):
+            self.games = games
+            self.url = url
+            self.calls = []
+        def get(self, path):
+            self.calls.append(path)
+            if path.startswith("search/autocomplete/"):
+                return {"data": self.games}
+            if path.startswith("grids/game/"):
+                return {"data": [{"id": 11, "score": 1, "url": self.url}]}
+            raise AssertionError(path)
+
+    def test_verified_game_names_from_repositories(self):
+        cases = {
+            ("CaiusCodes/Boom-Boom-Rocket-XBLA-PC-Recomp", "Boom-Boom-Rocket-XBLA-PC-Recomp"): "Boom Boom Rocket",
+            ("birabittoh/KameoRePowered", "KameoRePowered"): "Kameo: Elements of Power",
+            ("sciaschi/CBFD-Recompiled", "CBFD-Recompiled"): "Conker's Bad Fur Day",
+            ("psxrestore/Condemned2Recomp", "Condemned2Recomp"): "Condemned 2: Bloodshot",
+            ("bouchacha/Darklands-plus", "Darklands-plus"): "Darklands",
+        }
+        for (repo, name), original_game in cases.items():
+            with self.subTest(repo=repo):
+                self.assertEqual(update.sgdb_title(self.make_entry(repo, name)), original_game)
+
+    def test_manual_reviewed_title_config_and_explicit_null(self):
+        entry = self.make_entry("author/ComplexRecomp", "ComplexRecomp")
+        manual = {"steamGridDBTitles": {"github:author/ComplexRecomp": "The Original Game"}}
+        self.assertEqual(update.sgdb_title(entry, manual), "The Original Game")
+        self.assertIsNone(update.sgdb_title(entry, {"steamGridDBTitles": {
+            "github:author/ComplexRecomp": None}}))
+
+    def test_manual_override_beats_verified_alias(self):
+        entry = self.make_entry("birabittoh/KameoRePowered", "KameoRePowered")
+        manual = {"steamGridDBTitles": {"github:birabittoh/KameoRePowered": "Kameo Special Edition"}}
+        self.assertEqual(update.sgdb_title(entry, manual), "Kameo Special Edition")
+
+    def test_ambiguously_named_games_are_not_guessed(self):
+        self.assertIsNone(update.sgdb_title(self.make_entry("author/unknown", "CBFD")))
+        self.assertIsNone(update.sgdb_title(self.make_entry("author/unknown", "ABCDEF")))
+        entry = self.make_entry("CaiusCodes/GoldenEye-007-XBLA-PC-Recomp", "GoldenEye-007-XBLA-PC-Recomp")
+        self.assertNotEqual(update.sgdb_title(entry), "GoldenEye 007")
+
+    def test_v33_negative_cache_rechecked_with_correct_name(self):
+        from datetime import datetime, timezone
+        now = datetime(2026, 10, 16, tzinfo=timezone.utc)
+        entry = self.make_entry("birabittoh/KameoRePowered", "KameoRePowered")
+        sgdb = self.FakeSGDB([{"id": 77, "name": "Kameo: Elements of Power"}])
+        cache = {"github:birabittoh/KameoRePowered": {
+            "version": 1, "status": "no_match", "title": "kameorepowered",
+            "url": None, "checked_at": now.isoformat()}}
+        result = update.populate_steamgrid_images(sgdb, [entry], {},
+            self.author_cache(entry["repository"]), cache, now=now)
+        self.assertEqual(result["negative_cache_invalidated"], 1)
+        self.assertEqual(result["matches"], 1)
+        self.assertEqual(entry["appIconUrl"], sgdb.url)
+        self.assertIn("Kameo%3A%20Elements%20of%20Power", sgdb.calls[0])
+        self.assertEqual(cache["github:birabittoh/KameoRePowered"]["version"], 2)
+
+    def test_v33_positive_cache_is_preserved(self):
+        entry = self.make_entry("author/aerogauge", "AeroGauge: Recompiled")
+        sgdb = self.FakeSGDB([])
+        url = "https://cdn2.steamgriddb.com/grid/old-good.png"
+        cache = {"github:author/aerogauge": {"version": 1, "status": "success",
+            "title": "aerogauge", "url": url, "checked_at": "2026-10-16T12:00:00+00:00"}}
+        stats = update.populate_steamgrid_images(sgdb, [entry], {},
+            self.author_cache(entry["repository"]), cache)
+        self.assertEqual(entry["appIconUrl"], url)
+        self.assertEqual(stats["queries"], 0)
+        self.assertEqual(stats["reused"], 1)
+        self.assertEqual(sgdb.calls, [])
+
+    def test_curated_change_requires_new_lookup_not_stale_positive(self):
+        entry = self.make_entry("author/game", "AeroGauge")
+        cache = {"github:author/game": {"version": 1, "status": "success",
+            "title": "aerogauge", "url": "https://cdn2.steamgriddb.com/grid/old.png",
+            "checked_at": "2026-10-16T12:00:00+00:00"}}
+        sgdb = self.FakeSGDB([{"id": 33, "name": "Different Original Game"}])
+        override = {"steamGridDBTitles": {"github:author/game": "Different Original Game"}}
+        stats = update.populate_steamgrid_images(sgdb, [entry], override,
+            self.author_cache(entry["repository"]), cache)
+        self.assertEqual(stats["matches"], 1)
+        self.assertEqual(entry["appIconUrl"], sgdb.url)
+
+    def test_current_negative_cache_is_not_repeated_immediately(self):
+        entry = self.make_entry("author/Game", "Some Game")
+        from datetime import datetime, timezone
+        now = datetime(2026, 10, 16, tzinfo=timezone.utc)
+        cache = {"github:author/Game": {"version": 2, "status": "no_match",
+            "title": "some game", "url": None, "checked_at": now.isoformat()}}
+        sgdb = self.FakeSGDB([])
+        stats = update.populate_steamgrid_images(sgdb, [entry], {},
+            self.author_cache(entry["repository"]), cache, now=now)
+        self.assertEqual(stats["queries"], 0)
+        self.assertEqual(stats["negative_cache_invalidated"], 0)
+
+    def test_skips_protected_game_when_image_author_or_manual(self):
+        entry = self.make_entry("birabittoh/KameoRePowered", "KameoRePowered")
+        entry["appIconUrl"] = "https://raw.githubusercontent.com/author/game/main/cover.png"
+        sgdb = self.FakeSGDB([])
+        self.assertEqual(update.populate_steamgrid_images(sgdb, [entry], {}, {}, {})["queries"], 0)
+        entry["appIconUrl"] = None
+        manual = {"images": {"github:birabittoh/KameoRePowered": None}}
+        self.assertEqual(update.populate_steamgrid_images(sgdb, [entry], manual, {}, {})["queries"], 0)
+
+    def test_default_limit_50_and_pending_remains_for_next_run(self):
+        entries = [self.make_entry(f"author/Title{i}", f"Title Game {i}") for i in range(60)]
+        author = {x["repository"]: {"url": None} for x in entries}
+        sgdb = self.FakeSGDB([])
+        cache = {}
+        stats = update.populate_steamgrid_images(sgdb, entries, {}, author, cache)
+        self.assertEqual(stats["queries"], 50)
+        self.assertEqual(stats["pending"], 60)
+        self.assertEqual(len(cache), 50)
+        self.assertEqual(len(sgdb.calls), 50)
+
+    def test_version_and_workflow_unchanged(self):
+        self.assertEqual(update.__version__, "3.3.1")
+        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/update.yml").read_text()
+        self.assertIn("23 */4 * * *", workflow)
+        self.assertIn("STEAMGRIDDB_API_KEY: ${{ secrets.STEAMGRIDDB_API_KEY }}", workflow)

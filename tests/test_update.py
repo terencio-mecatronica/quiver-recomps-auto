@@ -703,3 +703,168 @@ class Version321ArtworkTests(unittest.TestCase):
             [{"repository": "owner/Game", "appIconUrl": None}], {}, cache)
         self.assertEqual(r["errors"], 1)
         self.assertNotIn("owner/Game", cache)
+
+
+class SteamGridDBVersion33Tests(unittest.TestCase):
+    """V3.3: fallback SteamGridDB testado sem rede e sem segredos."""
+
+    class FakeSGDB:
+        def __init__(self, titles=None, grids=None, error=None):
+            self.titles = titles or []
+            self.grids = grids or []
+            self.error = error
+            self.paths = []
+        def get(self, path):
+            self.paths.append(path)
+            if self.error:
+                raise update.SteamGridDBFailure(self.error)
+            if path.startswith("search/"):
+                return {"success": True, "data": self.titles}
+            if path.startswith("grids/"):
+                return {"success": True, "data": self.grids}
+            raise AssertionError("unexpected path")
+
+    def setUp(self):
+        self.cover = "https://cdn2.steamgriddb.com/grid/a123.jpg"
+        self.entry = {"name": "AeroGauge: Recompiled", "repository": "author/aerogauge", "tags": ["recomp"], "appIconUrl": None}
+        self.mock = self.FakeSGDB([{"id": 45, "name": "AeroGauge"}],
+                                  [{"id": 2, "score": 50, "url": self.cover}])
+        self.author = {"author/aerogauge": {"url": None, "checked_at": "2026-10-16T12:00:00+00:00"}}
+
+    def test_exact_match_returns_horizontal_grid(self):
+        status, url, game_id = update.sgdb_lookup(self.mock, "AeroGauge")
+        self.assertEqual((status, url, game_id), ("success", self.cover, 45))
+        self.assertIn("920x430,460x215", self.mock.paths[1])
+        self.assertIn("types=static", self.mock.paths[1])
+        self.assertIn("nsfw=false", self.mock.paths[1])
+
+    def test_ambiguous_exact_names_are_not_accepted(self):
+        mock = self.FakeSGDB([{"id": 1, "name": "AeroGauge"}, {"id": 2, "name": "Aerogauge"}])
+        self.assertEqual(update.sgdb_lookup(mock, "AeroGauge")[0], "ambiguous")
+        self.assertEqual(len(mock.paths), 1)
+
+    def test_partial_match_is_not_accepted(self):
+        mock = self.FakeSGDB([{"id": 1, "name": "AeroGauge II"}])
+        self.assertEqual(update.sgdb_lookup(mock, "AeroGauge")[0], "no_match")
+        self.assertEqual(len(mock.paths), 1)
+
+    def test_unsafe_remote_art_url_is_rejected(self):
+        bad = ["http://cdn2.steamgriddb.com/grid/a.png",
+               "https://evil.com/grid/a.png",
+               "https://cdn2.steamgriddb.com@evil.com/grid/a.png",
+               "https://avatars.githubusercontent.com/u/1.png"]
+        for url in bad:
+            self.assertIsNone(update.sgdb_image_url(url), msg=url)
+        self.assertEqual(update.sgdb_image_url(self.cover), self.cover)
+
+    def test_normalized_title_without_suffix(self):
+        self.assertEqual(update.sgdb_title(self.entry), "AeroGauge")
+        self.assertEqual(update.sgdb_normalize("Pokémon: Stadium"), "pokemon stadium")
+        self.assertIsNone(update.sgdb_title({"name": "Z3R", "tags": ["recomp"]}))
+        self.assertIsNone(update.sgdb_title({"name": "Azahar", "tags": ["emulator"]}))
+
+    def test_fallback_applies_and_is_cached(self):
+        cache = {}
+        summary = update.populate_steamgrid_images(self.mock, [self.entry], {}, self.author, cache)
+        self.assertEqual(summary["matches"], 1)
+        self.assertEqual(self.entry["appIconUrl"], self.cover)
+        self.assertEqual(cache["github:author/aerogauge"]["status"], "success")
+        self.assertNotIn("secret", str(cache))
+        again = {**self.entry, "appIconUrl": None}
+        second = update.populate_steamgrid_images(self.mock, [again], {}, self.author, cache)
+        self.assertEqual(again["appIconUrl"], self.cover)
+        self.assertEqual(second["queries"], 0)
+        self.assertEqual(len(self.mock.paths), 2)
+
+    def test_author_image_and_manual_null_are_untouched(self):
+        self.entry["appIconUrl"] = "https://raw.githubusercontent.com/author/aerogauge/main/banner.png"
+        s = update.populate_steamgrid_images(self.mock, [self.entry], {}, self.author, {})
+        self.assertEqual(s["queries"], 0)
+        self.assertNotEqual(self.entry["appIconUrl"], self.cover)
+        self.entry["appIconUrl"] = None
+        config = {"images": {"github:author/aerogauge": None}}
+        s = update.populate_steamgrid_images(self.mock, [self.entry], config, self.author, {})
+        self.assertEqual(s["queries"], 0)
+        self.assertIsNone(self.entry["appIconUrl"])
+
+    def test_waits_for_author_scanning_before_using_sgdb(self):
+        s = update.populate_steamgrid_images(self.mock, [self.entry], {}, {}, {})
+        self.assertEqual(s["queries"], 0)
+
+    def test_negative_match_does_not_retry_immediately(self):
+        mock = self.FakeSGDB([{"id": 5, "name": "Different Game"}])
+        cache = {}
+        update.populate_steamgrid_images(mock, [self.entry], {}, self.author, cache)
+        self.assertEqual(cache["github:author/aerogauge"]["status"], "no_match")
+        update.populate_steamgrid_images(mock, [self.entry], {}, self.author, cache)
+        self.assertEqual(len(mock.paths), 1)
+
+    def test_no_key_disables_fallback(self):
+        s = update.populate_steamgrid_images(None, [self.entry], {}, self.author, {})
+        self.assertFalse(s["enabled"])
+        self.assertEqual(s["queries"], 0)
+
+    def test_rate_limit_preserves_cache_and_does_not_publish_false_negative(self):
+        sgdb = self.FakeSGDB(error=429)
+        cache = {}
+        s = update.populate_steamgrid_images(sgdb, [self.entry], {}, self.author, cache)
+        self.assertTrue(s["rate_limited"])
+        self.assertEqual(s["errors"], 1)
+        self.assertEqual(cache, {})
+
+    def test_auth_error_is_signaled_without_secret(self):
+        sgdb = self.FakeSGDB(error=401)
+        s = update.populate_steamgrid_images(sgdb, [self.entry], {}, self.author, {})
+        self.assertTrue(s["auth_error"])
+        self.assertFalse(s["rate_limited"])
+
+    def test_no_grids_is_cached_as_no_art(self):
+        sgdb = self.FakeSGDB([{"id": 1, "name": "AeroGauge"}], [])
+        cache = {}
+        s = update.populate_steamgrid_images(sgdb, [self.entry], {}, self.author, cache)
+        self.assertEqual(s["no_art"], 1)
+        self.assertEqual(cache["github:author/aerogauge"]["status"], "no_art")
+
+    def test_workflow_reads_secret_and_retains_interval(self):
+        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/update.yml")
+        text = workflow.read_text(encoding="utf-8")
+        self.assertIn("STEAMGRIDDB_API_KEY: ${{ secrets.STEAMGRIDDB_API_KEY }}", text)
+        self.assertIn("23 */4 * * *", text)
+        self.assertIn("workflow_dispatch:", text)
+
+    def test_full_generation_without_sgdb_remains_backward_compatible(self):
+        # A chave e opcional: nenhuma consulta ao SGDB e feita nos testes legados.
+        self.assertEqual(update.__version__, "3.3")
+
+class Version33IntegrationTest(unittest.TestCase):
+    def test_generator_publishes_sgdb_art_and_persists_cache(self):
+        from test_update import FakeAPI
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            for folder in ("config", "data", "output"):
+                (base / folder).mkdir()
+            (base / "config/sources.json").write_text(json.dumps({
+                "autoDiscoverGitHubManifests": False,
+                "repositories": [],
+            }), encoding="utf-8")
+            (base / "config/overrides.json").write_text('{"repositories":{},"excludedRepositories":[]}',encoding="utf-8")
+            (base / "data/discovered_repos.json").write_text('{"repositories":[]}',encoding="utf-8")
+            (base / "config/minha-lista-114.json").write_text(json.dumps({"apps":[{
+                "name": "AeroGauge", "repository": "owner/Game", "folderName": "AeroGauge", "appIconUrl": None,
+                "tags": ["recomp"]}]}), encoding="utf-8")
+            class SGDB:
+                def get(self, path):
+                    if path.startswith("search/"):
+                        return {"data": [{"id": 100, "name": "AeroGauge"}]}
+                    if path.startswith("grids/"):
+                        return {"data": [{"id": 2, "score": 10,
+                                          "url": "https://cdn2.steamgriddb.com/grid/xyz.png"}]}
+                    raise AssertionError(path)
+            summary = update.regenerate(FakeAPI(), base, discovery=False, sgdb_client=SGDB())
+            self.assertEqual(summary["steamgriddb"]["applied"], 1)
+            self.assertEqual(summary["with_images"], 1)
+            j = update.read_json(base / "output/tudo-quiver.json")
+            self.assertEqual(j["apps"][0]["appIconUrl"], "https://cdn2.steamgriddb.com/grid/xyz.png")
+            cache = update.read_json(base / "data/snapshot.json")["steamgriddb"]
+            self.assertIn("github:owner/Game", cache)
+            self.assertNotIn("STEAMGRIDDB_API_KEY", json.dumps(cache))

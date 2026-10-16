@@ -182,9 +182,6 @@ class Tests(unittest.TestCase):
         self.assertIsNone(update.read_json(self.base / "output/em-desenvolvimento.json")["apps"][0]["appIconUrl"])
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 class BroadDiscoveryTests(unittest.TestCase):
     """Cobertura da v3 sem rede: reproduz os dados essenciais de LASRecomp."""
     class BroadFake:
@@ -300,3 +297,157 @@ class BroadDiscoveryTests(unittest.TestCase):
         result = update.regenerate(FailedSearch(), self.base)
         self.assertEqual(result["playable_windows"], 1)
         self.assertIn("error", result["search"])
+
+
+class Version31Tests(unittest.TestCase):
+    """Regressao da v3.1: cobertura paginada, fila e classificacao conservadora."""
+
+    def test_searches_two_pages_of_100_and_sorts_by_update(self):
+        from urllib.parse import parse_qs, urlparse
+        class SearchAPI:
+            def __init__(self): self.calls = []
+            def get(self, url):
+                q = parse_qs(urlparse(url).query)
+                self.calls.append(q)
+                page = int(q["page"][0])
+                if page == 1:
+                    return {"items": [{"full_name": f"owner/Game{i}", "pushed_at": "2026-10-15T00:00:00Z"}
+                                      for i in range(100)]}
+                return {"items": [{"full_name": "owner/Page2"}]}
+        api = SearchAPI()
+        found, stats = update.discover_repository_search(
+            api, ['"static recompilation" in:description'])
+        self.assertEqual(stats["requests"], 2)
+        self.assertEqual(len(found), 101)
+        self.assertEqual([int(c["page"][0]) for c in api.calls], [1, 2])
+        self.assertEqual(api.calls[0]["per_page"], ["100"])
+        self.assertEqual(api.calls[0]["sort"], ["updated"])
+        self.assertEqual(api.calls[0]["order"], ["desc"])
+
+    def test_rotates_extra_pages_without_losing_first_page(self):
+        from urllib.parse import parse_qs, urlparse
+        class SearchAPI:
+            def __init__(self): self.pages = []
+            def get(self, url):
+                page = int(parse_qs(urlparse(url).query)["page"][0])
+                self.pages.append(page)
+                return {"items": [{"full_name": f"org/Repo{page}_{i}"} for i in range(100)]}
+        api = SearchAPI()
+        update.discover_repository_search(api, ["recomp in:name"], page_window=2, sort=None)
+        self.assertEqual(api.pages, [1, 4])
+
+    def test_partial_rate_limit_keeps_successful_search_results(self):
+        class SearchAPI:
+            calls = 0
+            def get(self, url):
+                self.calls += 1
+                if self.calls == 2:
+                    raise update.FetchFailure("HTTP 429")
+                return {"items": [{"full_name": f"org/Game{i}"} for i in range(100)]}
+        found, stats = update.discover_repository_search(SearchAPI(), ["recomp in:name"])
+        self.assertEqual(len(found), 100)
+        self.assertEqual(stats["requests"], 1)
+        self.assertIn("429", stats["error"])
+        self.assertIn("recomp in:name", stats["incomplete_queries"])
+
+    def test_pc_package_requires_explicit_windows_context(self):
+        release = [{"draft": False, "assets": [
+            {"name": "LASRecomp-beta-PC.zip", "browser_download_url": "https://github.com/example"}]}]
+        self.assertFalse(update.has_windows_asset(release, "github")[0])
+        self.assertTrue(update.has_windows_asset(release, "github", pc_is_windows=True)[0])
+        release[0]["assets"][0]["name"] = "LASRecomp-linux-PC.zip"
+        self.assertFalse(update.has_windows_asset(release, "github", pc_is_windows=True)[0])
+        release[0]["assets"][0]["name"] = "LASRecomp-PC-source.zip"
+        self.assertFalse(update.has_windows_asset(release, "github", pc_is_windows=True)[0])
+
+    def test_early_author_statement_can_confirm_development(self):
+        meta = {"name": "SomeRecomp", "description": "Static recompilation of an old game."}
+        entry, stage, audit = update.classify_unmanifested(
+            "org/Game", meta, "This is an early development project. Work in progress.", [])
+        self.assertEqual(stage, "development")
+        self.assertIn("windows-nao-confirmado", entry["tags"])
+        self.assertFalse(audit["windows_asset_detected"])
+
+    def test_windows_pc_release_requires_author_windows_statement(self):
+        release = [{"assets": [{"name": "Game-PC.zip", "browser_download_url": "https://github.com/example"}]}]
+        meta = {"name": "Game", "description": "Static recompilation of a game for Windows."}
+        entry, stage, _ = update.classify_unmanifested("org/Game", meta, "", release)
+        self.assertEqual(stage, "playable")
+        self.assertIn("windows", entry["tags"])
+        meta["description"] = "Static recompilation of a game for desktop."
+        entry, stage, _ = update.classify_unmanifested("org/Game", meta, "", release)
+        self.assertEqual(stage, "review")
+        self.assertIsNone(entry)
+
+    def test_priority_queue_preserves_already_checked_entries(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as td:
+            base = Path(td)
+            for p in ("data", "config", "output"): (base / p).mkdir()
+            def write(rel, content): (base / rel).write_text(json.dumps(content), encoding="utf-8")
+            write("config/sources.json", {
+                "repositories": [{"host":"github", "repo":f"user/R{i}",
+                                  "name":f"R{i}", "kind":"recomp", "curatedStatus":"in-progress"}
+                                 for i in range(6)],
+                "autoDiscoverGitHubManifests": False, "maxRepositoriesPerRun": 3})
+            write("config/overrides.json", {"repositories": {}})
+            write("config/minha-lista-114.json", {"apps": []})
+            write("data/discovered_repos.json", {"repositories": []})
+            write("data/snapshot.json", {"cursor": 0, "repositories": {
+                "github:user/R0": {"classification":"development", "entry": {
+                    "name":"R0", "project":"R0", "repository":"user/R0", "folderName":"R0",
+                    "tags":["recomp-tracker", "recomp", "em-desenvolvimento", "in-progress"],
+                    "appIconUrl": None}, "audit":{"repo":"user/R0", "classification":"development"}},
+                "github:user/R1": {"classification":"development", "entry": {
+                    "name":"R1", "project":"R1", "repository":"user/R1", "folderName":"R1",
+                    "tags":["recomp-tracker", "recomp", "em-desenvolvimento", "in-progress"],
+                    "appIconUrl": None}, "audit":{"repo":"user/R1", "classification":"development"}}
+            }})
+            class API:
+                github_token = ""
+                def __init__(self): self.checked=[]
+                def get(self, url, *, missing_ok=False):
+                    if url.endswith("/releases?per_page=8"):return []
+                    if "/contents/" in url:return None
+                    if "/repos/" in url:
+                        self.checked.append(url.split("/repos/")[1])
+                        return {"name": url.rsplit("/",1)[-1],"default_branch":"main"}
+                    return None
+            api = API()
+            result = update.regenerate(api, base, discovery=False)
+            self.assertEqual(result["checked_this_run"], 3)
+            self.assertGreaterEqual(len([x for x in api.checked if x not in ("user/R0", "user/R1")]), 2)
+            self.assertEqual(result["awaiting_first_check"], 2)
+            self.assertIn("user/R0", [a["repository"] for a in
+                          update.read_json(base / "output/tudo-quiver.json")["apps"]])
+
+    def test_search_sort_alternates_between_runs(self):
+        import tempfile
+        from urllib.parse import parse_qs, urlparse
+        with tempfile.TemporaryDirectory() as td:
+            base = Path(td)
+            for p in ("data", "config", "output"): (base/p).mkdir()
+            (base/"config/sources.json").write_text(json.dumps({
+                "repositories":[],"autoDiscoverGitHubManifests":False,
+                "repositorySearchQueries":["recomp in:name"],"repositorySearchPages":1}))
+            (base/"config/overrides.json").write_text('{"repositories":{}}')
+            (base/"config/minha-lista-114.json").write_text('{"apps":[]}')
+            (base/"data/discovered_repos.json").write_text('{"repositories":[]}')
+            class API:
+                github_token="token"
+                def __init__(self): self.search_params=[]
+                def get(self, url, *, missing_ok=False):
+                    if "/search/repositories?" in url:
+                        self.search_params.append(parse_qs(urlparse(url).query))
+                        return {"items":[]}
+                    return None
+            api = API()
+            update.regenerate(api, base)
+            update.regenerate(api, base)
+            self.assertEqual(api.search_params[0]["sort"],["updated"])
+            self.assertNotIn("sort",api.search_params[1])
+            self.assertEqual(update.read_json(base/"data/snapshot.json")["search_cycle"],2)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gerador de listas Quiver via fontes originais, buscas GitHub e manifestos.
+"""Quiver Recomps Auto v3.1: fontes originais, busca ampla e fila incremental.
 
 Nenhuma consulta ao banco de dados recomp.fyi. O formato de manifesto e aberto
 (CC BY 4.0); os registros sao obtidos diretamente dos repositorios originais.
@@ -18,11 +18,13 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlencode
 from urllib.request import Request, urlopen
 
+__version__ = "3.1"
 BASE = Path(__file__).resolve().parents[1]
 WIN_STATUSES = {"playable", "released", "complete"}
 DEV_STATUSES = {"exploring", "in-progress", "paused"}
 VALID_TYPES = {"recomp", "port", "decomp"}
 WIN_NAME = re.compile(r"(?:windows?|win[-_.]?(?:32|64|x64|x86|arm64)|x64[-_.]?win|x86[-_.]?win)", re.I)
+PC_BUILD_NAME = re.compile(r"(?:^|[^a-z0-9])(?:pc|desktop)(?:[^a-z0-9]|$)", re.I)
 ASSET_EXTENSION = re.compile(r"\.(?:zip|7z|rar|exe|msi|msix|msixbundle|tar\.gz)$", re.I)
 EXCLUDED_ASSET = re.compile(r"(?:source|src|symbols?|debug|sdk|linux|macos|darwin|android|\.appimage)", re.I)
 REPO = re.compile(r"^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)+$")
@@ -134,29 +136,48 @@ DEFAULT_REPOSITORY_QUERIES = [
 ]
 
 
-def discover_repository_search(api: API, queries: list[str], max_pages: int = 1,
-                               per_page: int = 50) -> tuple[list[dict], dict]:
-    """Busca oficial de *repositórios*; sem scraping ou bases de terceiros.
+def discover_repository_search(api: API, queries: list[str], max_pages: int = 2,
+                               per_page: int = 100, *, sort: str | None = "updated",
+                               page_window: int = 0) -> tuple[list[dict], dict]:
+    """Busca ampla e incremental na API oficial de repositorios.
 
-    Mantém a informação da consulta como pista, nunca como prova de jogabilidade.
-    O GitHub ordena por melhor correspondência por padrão. Os resultados da API
-    são paginados e limitados, logo a descoberta não é exaustiva.
+    Primeira pagina sempre lida; paginas seguintes rotacionam em janelas para
+    ampliar cobertura ao longo das execucoes sem estourar 30 buscas/minuto.
+    Alternar 'updated' e relevancia tambem evita vies de um unico ranking.
+    Um erro apos retornos parciais preserva esses resultados e e auditado.
     """
+    if sort not in (None, "updated") or max_pages < 1 or not 1 <= per_page <= 100:
+        raise ValueError("Parametros invalidos de pesquisa GitHub")
+    window = max(0, page_window) % 5
+    pages = [1] + [2 + window * max(0, max_pages - 1) + i
+                   for i in range(max(0, max_pages - 1))]
+    # A busca do GitHub entrega no maximo os primeiros 1000 resultados.
+    pages = [p for p in pages if p * per_page <= 1000]
     discovered: dict[str, dict] = {}
-    summary = {"queries": len(queries), "requests": 0, "incomplete_queries": [], "returned": 0}
+    summary = {"queries": len(queries), "requests": 0, "incomplete_queries": [],
+               "returned": 0, "sort": sort or "best-match", "pages": pages}
     for query in queries:
         if not isinstance(query, str) or not query.strip() or len(query) > 250:
-            raise ValueError("Consulta de descoberta inválida")
-        for page in range(1, max_pages + 1):
-            url = "https://api.github.com/search/repositories?" + urlencode(
-                {"q": query, "per_page": per_page, "page": page})
-            response = api.get(url)
+            raise ValueError("Consulta de descoberta invalida")
+        for page in pages:
+            params = {"q": query, "per_page": per_page, "page": page}
+            if sort:
+                params.update(sort=sort, order="desc")
+            url = "https://api.github.com/search/repositories?" + urlencode(params)
+            try:
+                response = api.get(url)
+            except FetchFailure as ex:
+                if summary["requests"] == 0:
+                    raise
+                summary["error"] = str(ex)
+                summary["incomplete_queries"].append(query)
+                return sorted(discovered.values(), key=lambda x: x["repo"].casefold()), summary
             summary["requests"] += 1
             if response.get("incomplete_results"):
                 summary["incomplete_queries"].append(query)
             rows = response.get("items", [])
             if not isinstance(rows, list):
-                raise FetchFailure("Resposta inválida da pesquisa de repositórios")
+                raise FetchFailure("Resposta invalida da pesquisa de repositorios")
             summary["returned"] += len(rows)
             for row in rows:
                 if not isinstance(row, dict) or row.get("private") or row.get("archived") or row.get("fork"):
@@ -167,9 +188,14 @@ def discover_repository_search(api: API, queries: list[str], max_pages: int = 1,
                 key = name.casefold()
                 if key not in discovered:
                     discovered[key] = {"host": "github", "repo": name, "discoveredBy": "repository_search"}
+                pushed_at = row.get("pushed_at") or row.get("updated_at")
+                if isinstance(pushed_at, str) and pushed_at > discovered[key].get("lastPush", ""):
+                    discovered[key]["lastPush"] = pushed_at
                 matches = discovered[key].setdefault("matchedQueries", [])
                 if query not in matches:
                     matches.append(query)
+            if len(rows) < per_page:
+                break
     return sorted(discovered.values(), key=lambda x: x["repo"].casefold()), summary
 
 
@@ -196,7 +222,10 @@ RECOMP_CLAIM = re.compile(r"\b(?:static(?:ally)?[ -]?recompil(?:ation|ed|ing)|"
 PORT_CLAIM = re.compile(r"\b(?:source[ -]port|native[ -](?:pc|windows)[ -]port|"
                         r"(?:pc|windows)[ -]port of|port of (?:the )?game)\b", re.I)
 DEV_CLAIM = re.compile(r"\b(?:work in progress|under development|"
-                       r"still in development|early development|"
+                       r"still in development|early development|in active development|"
+                       r"currently in development|currently working on|"
+                       r"experimental (?:build|project|recompilation)|"
+                       r"proof of concept|pre[- ]alpha|not playable yet|"
                        r"in[- ]progress|w\.?i\.?p\.?)\b", re.I)
 NON_GAME_CLAIM = re.compile(r"^(?:a |an |the )?(?:toolchain|compiler|framework|sdk|"
                             r"recompilation tool|recompilation framework|"
@@ -227,8 +256,11 @@ def classify_unmanifested(repo: str, meta: dict, readme: str,
     somente se o autor explicitamente diz WIP. Demais casos vão para revisão.
     """
     kind, evidence = classify_self_description(meta, readme)
-    windows_asset, asset_names_found = has_windows_asset(release_list, "github")
-    dev = bool(DEV_CLAIM.search(str(meta.get("description") or "") + "\n" + readme[:2000]))
+    author_text = str(meta.get("description") or "") + "\n" + readme[:2600]
+    declared_windows = bool(re.search(r"\bwindows\b", author_text, re.I))
+    windows_asset, asset_names_found = has_windows_asset(
+        release_list, "github", pc_is_windows=declared_windows)
+    dev = bool(DEV_CLAIM.search(author_text))
     name = str(meta.get("name") or repo.split("/")[-1]).strip()[:160]
     reason = evidence
     stage = "review"
@@ -255,7 +287,7 @@ def classify_unmanifested(repo: str, meta: dict, readme: str,
     audit = {"host": "github", "repo": repo, "classification": stage,
              "manifest_from_author": False, "type": [kind] if kind else [],
              "status": "windows-build" if stage == "playable" else "in-progress" if dev else "not-reported",
-             "declared_windows": bool(re.search(r"\bwindows\b", str(meta.get("description") or "") + "\n" + readme[:2600], re.I)),
+             "declared_windows": declared_windows,
              "windows_asset_detected": windows_asset,
              "matched_release_assets": asset_names_found,
              "reason": reason, "evidence": "https://github.com/" + repo,
@@ -318,13 +350,17 @@ def asset_names(release: dict, host: str) -> list[str]:
             if isinstance(a, dict) and str(a.get("url", "")).startswith("https://")]
 
 
-def has_windows_asset(release_list: list, host: str) -> tuple[bool, list[str]]:
+def has_windows_asset(release_list: list, host: str, *, pc_is_windows: bool = False) -> tuple[bool, list[str]]:
+    """Pacote Windows explicito, ou PC com Windows declarado pelo proprio autor.
+
+    'PC' sozinho nao basta: poderia ser um port exclusivo para Linux/macOS.
+    """
     for release in release_list:
         if host == "github" and release.get("draft"):
             continue
         candidates = [n for n in asset_names(release, host)
-                      if WIN_NAME.search(n) and ASSET_EXTENSION.search(n)
-                      and not EXCLUDED_ASSET.search(n)]
+                      if (WIN_NAME.search(n) or (pc_is_windows and PC_BUILD_NAME.search(n)))
+                      and ASSET_EXTENSION.search(n) and not EXCLUDED_ASSET.search(n)]
         if candidates:
             return True, candidates
     return False, []
@@ -490,6 +526,10 @@ def regenerate(api: API, base: Path, *, discovery: bool = True) -> dict:
     excluded = set(overrides.get("excludedRepositories", []))
     cached = read_json(base / "data/discovered_repos.json").get("repositories", [])
     seeds = config.get("repositories", [])
+    snapshot_path = base / "data/snapshot.json"
+    snapshot = read_json(snapshot_path) if snapshot_path.exists() else {"cursor": 0, "repositories": {}}
+    search_cycle = int(snapshot.get("search_cycle", 0))
+    search_attempted = False
     discovered = []
     search_stats = {"repository_search": "disabled"}
     if discovery and api.github_token:
@@ -499,9 +539,15 @@ def regenerate(api: API, base: Path, *, discovery: bool = True) -> dict:
                 queries = config.get("repositorySearchQueries", DEFAULT_REPOSITORY_QUERIES)
                 if not isinstance(queries, list) or len(queries) > 20:
                     raise ValueError("repositorySearchQueries deve ser uma lista com até 20 termos")
+                search_attempted = True
+                # V3.1: 2 paginas x 100 resultados por consulta, por padrao.
+                # Executa 20 buscas quando ha 10 consultas; alterna ordenacao
+                # por atividade e relevancia e varre paginas adicionais por ciclo.
                 repo_results, search_stats = discover_repository_search(
-                    api, queries, max(1, min(3, int(config.get("repositorySearchPages", 1)))),
-                    max(10, min(100, int(config.get("repositorySearchPerPage", 50)))))
+                    api, queries, max(1, min(3, int(config.get("repositorySearchPages", 2)))),
+                    max(10, min(100, int(config.get("repositorySearchPerPage", 100)))),
+                    sort="updated" if search_cycle % 2 == 0 else None,
+                    page_window=search_cycle // 2)
                 discovered.extend(repo_results)
             except FetchFailure as ex:
                 search_stats = {"error": str(ex)}
@@ -525,15 +571,33 @@ def regenerate(api: API, base: Path, *, discovery: bool = True) -> dict:
             candidates[key] = {**candidates.get(key, {}), **c}
     # Atualizacao incremental: nao repete centenas de chamadas na mesma execucao.
     # Entradas ainda nao visitadas permanecem no ultimo snapshot conhecido.
-    snapshot_path = base / "data/snapshot.json"
-    snapshot = read_json(snapshot_path) if snapshot_path.exists() else {"cursor": 0, "repositories": {}}
     previous = {k: v for k, v in snapshot.get("repositories", {}).items() if k in candidates}
     all_keys = sorted(candidates, key=str.casefold)
     max_per_run = max(1, min(300, int(config.get("maxRepositoriesPerRun", 60))))
     cursor = int(snapshot.get("cursor", 0))
     start = cursor % len(all_keys) if all_keys else 0
-    picked = [all_keys[(start + i) % len(all_keys)] for i in range(min(max_per_run, len(all_keys)))] if all_keys else []
-    next_cursor = (start + len(picked)) % len(all_keys) if all_keys else 0
+    # V3.1: ate 2/3 das vagas para projetos sem primeira verificacao,
+    # especialmente os atualizados recentemente. O restante mantem uma
+    # rotacao justa que revisita projetos antigos e evita desatualizacao.
+    pending_keys = [k for k in all_keys if k not in previous]
+    # Datas ISO 8601 em ordem decrescente, repositorios sem data depois.
+    dated = sorted((k for k in pending_keys if candidates[k].get("lastPush")),
+                   key=lambda k: str(candidates[k]["lastPush"]), reverse=True)
+    undated = sorted(k for k in pending_keys if not candidates[k].get("lastPush"))
+    pending_keys = dated + undated
+    pending_budget = min(len(pending_keys), max(1, (max_per_run * 2) // 3))
+    picked = pending_keys[:pending_budget]
+    selected = set(picked)
+    if all_keys:
+        for i in range(len(all_keys)):
+            if len(picked) >= min(max_per_run, len(all_keys)):
+                break
+            key = all_keys[(start + i) % len(all_keys)]
+            if key not in selected:
+                picked.append(key)
+                selected.add(key)
+    next_cursor = (start + min(max_per_run, len(all_keys))) % len(all_keys) if all_keys else 0
+    first_checks_scheduled = sum(key not in previous for key in picked)
     discovered_valid = []
     seed_keys = {f"{s.get('host', 'github')}:{s.get('repo', '')}" for s in seeds}
     for key in picked:
@@ -593,7 +657,10 @@ def regenerate(api: API, base: Path, *, discovery: bool = True) -> dict:
         "tudo-quiver.json": {"apps": combined},
         "candidatos-revisao.json": {"review": review, "awaiting_first_check": pending,
                                     "notice": "Não importar este relatório no Quiver; candidatos sem confirmação."},
-        "relatorio.json": {"summary": {"playable_windows": len(playable),
+        "relatorio.json": {"summary": {"generator_version": __version__,
+                                        "candidate_repositories": len(all_keys),
+                                        "first_checks_scheduled": first_checks_scheduled,
+                                        "playable_windows": len(playable),
                                        "development": len(developing),
                                        "combined_with_legacy": len(combined),
                                        "tracked": len(audit),
@@ -609,7 +676,9 @@ def regenerate(api: API, base: Path, *, discovery: bool = True) -> dict:
     # Apenas apos TODAS as consultas obrigatorias completas publicamos dados.
     for filename, body in payloads.items():
         write_json_if_changed(base / "output" / filename, body)
-    write_json_if_changed(snapshot_path, {"cursor": next_cursor, "repositories": dict(sorted(previous.items()))})
+    write_json_if_changed(snapshot_path, {"cursor": next_cursor,
+                                          "search_cycle": search_cycle + int(search_attempted),
+                                          "repositories": dict(sorted(previous.items()))})
     retained = {(x["host"], x["repo"]) for x in cached}
     retained |= {(x["host"], x["repo"]) for x in discovered_valid}
     retained |= {(x["host"], x["repo"]) for x in discovered}

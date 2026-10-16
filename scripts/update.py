@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gerador independente de listas Quiver via .recomp.json, GitHub e GitLab.
+"""Gerador de listas Quiver via fontes originais, buscas GitHub e manifestos.
 
 Nenhuma consulta ao banco de dados recomp.fyi. O formato de manifesto e aberto
 (CC BY 4.0); os registros sao obtidos diretamente dos repositorios originais.
@@ -118,6 +118,152 @@ def discover_github(api: API, max_pages: int) -> list[dict]:
     return [{"host": "github", "repo": r} for r in sorted(found, key=str.casefold)]
 
 
+
+# Termos restringidos a recompilações e ports. Não copiamos catálogos de terceiros.
+DEFAULT_REPOSITORY_QUERIES = [
+    '"static recompilation" in:description',
+    '"recompilation" "Windows" in:description',
+    '"recompilation" "native" in:description',
+    '"native PC port" in:description',
+    '"source port" in:description',
+    'recomp in:name',
+    'topic:static-recompilation',
+    'topic:n64recomp',
+    '"N64Recomp" in:readme',
+    '"static recompilation" in:readme',
+]
+
+
+def discover_repository_search(api: API, queries: list[str], max_pages: int = 1,
+                               per_page: int = 50) -> tuple[list[dict], dict]:
+    """Busca oficial de *repositórios*; sem scraping ou bases de terceiros.
+
+    Mantém a informação da consulta como pista, nunca como prova de jogabilidade.
+    O GitHub ordena por melhor correspondência por padrão. Os resultados da API
+    são paginados e limitados, logo a descoberta não é exaustiva.
+    """
+    discovered: dict[str, dict] = {}
+    summary = {"queries": len(queries), "requests": 0, "incomplete_queries": [], "returned": 0}
+    for query in queries:
+        if not isinstance(query, str) or not query.strip() or len(query) > 250:
+            raise ValueError("Consulta de descoberta inválida")
+        for page in range(1, max_pages + 1):
+            url = "https://api.github.com/search/repositories?" + urlencode(
+                {"q": query, "per_page": per_page, "page": page})
+            response = api.get(url)
+            summary["requests"] += 1
+            if response.get("incomplete_results"):
+                summary["incomplete_queries"].append(query)
+            rows = response.get("items", [])
+            if not isinstance(rows, list):
+                raise FetchFailure("Resposta inválida da pesquisa de repositórios")
+            summary["returned"] += len(rows)
+            for row in rows:
+                if not isinstance(row, dict) or row.get("private") or row.get("archived") or row.get("fork"):
+                    continue
+                name = row.get("full_name", "")
+                if not isinstance(name, str) or name.count("/") != 1 or not REPO.fullmatch(name):
+                    continue
+                key = name.casefold()
+                if key not in discovered:
+                    discovered[key] = {"host": "github", "repo": name, "discoveredBy": "repository_search"}
+                matches = discovered[key].setdefault("matchedQueries", [])
+                if query not in matches:
+                    matches.append(query)
+    return sorted(discovered.values(), key=lambda x: x["repo"].casefold()), summary
+
+
+def get_readme(api: API, repo: str) -> str:
+    """Readme obtido da API oficial; tamanho limitado; 404 é normal."""
+    obj = api.get(github_api(repo, "/readme"), missing_ok=True)
+    if not isinstance(obj, dict) or obj.get("encoding") != "base64":
+        return ""
+    contents = obj.get("content", "")
+    if not isinstance(contents, str) or len(contents) > 170_000:
+        return ""
+    try:
+        raw = base64.b64decode(contents, validate=False)
+        return raw[:95_000].decode("utf-8", errors="replace")
+    except (ValueError, TypeError):
+        return ""
+
+
+# Somente metadados escritos pelos autores. Palavras em buscas não bastam.
+RECOMP_CLAIM = re.compile(r"\b(?:static(?:ally)?[ -]?recompil(?:ation|ed|ing)|"
+                          r"recompil(?:ation|ed|ing) of|"
+                          r"(?:n64|gamecube|switch|ps[12])[ -]?recomp(?:ilation)?|"
+                          r"game[ -]?recompil(?:ation|ation project))\b", re.I)
+PORT_CLAIM = re.compile(r"\b(?:source[ -]port|native[ -](?:pc|windows)[ -]port|"
+                        r"(?:pc|windows)[ -]port of|port of (?:the )?game)\b", re.I)
+DEV_CLAIM = re.compile(r"\b(?:work in progress|under development|"
+                       r"still in development|early development|"
+                       r"in[- ]progress|w\.?i\.?p\.?)\b", re.I)
+NON_GAME_CLAIM = re.compile(r"^(?:a |an |the )?(?:toolchain|compiler|framework|sdk|"
+                            r"recompilation tool|recompilation framework|"
+                            r"tutorial|template|library for|example project)\b", re.I)
+
+
+def classify_self_description(meta: dict, readme: str) -> tuple[str | None, str]:
+    """Atribui apenas o tipo de trabalho com evidência textual próxima do início.
+
+    Evita confundir frameworks de recompilação com jogos recompilados.
+    """
+    description = str(meta.get("description") or "")[:1000]
+    readme_opening = re.sub(r"<[^>]*>", " ", readme[:2600])
+    candidate = description + "\n" + readme_opening
+    if NON_GAME_CLAIM.search(description):
+        return None, "Descrição do autor indica ferramenta ou biblioteca"
+    kind = "recomp" if RECOMP_CLAIM.search(candidate) else "port" if PORT_CLAIM.search(candidate) else None
+    if kind is None:
+        return None, "Sem autoidentificação de recompilação/port pelo autor"
+    return kind, "Declaração explícita no README/descrição do repositório"
+
+
+def classify_unmanifested(repo: str, meta: dict, readme: str,
+                          release_list: list[dict]) -> tuple[dict | None, str, dict]:
+    """Decisões verificáveis, sem assumir que uma release é plenamente jogável.
+
+    Build distribuída para Windows -> lista 'Windows'; sem build, desenvolvimento
+    somente se o autor explicitamente diz WIP. Demais casos vão para revisão.
+    """
+    kind, evidence = classify_self_description(meta, readme)
+    windows_asset, asset_names_found = has_windows_asset(release_list, "github")
+    dev = bool(DEV_CLAIM.search(str(meta.get("description") or "") + "\n" + readme[:2000]))
+    name = str(meta.get("name") or repo.split("/")[-1]).strip()[:160]
+    reason = evidence
+    stage = "review"
+    if kind and windows_asset:
+        stage = "playable"
+        reason = "Release não-draft contém pacote explicitamente nomeado para Windows (pode ser beta)"
+    elif kind and dev:
+        stage = "development"
+        reason = "Autor declarou explicitamente que o projeto está em desenvolvimento"
+    elif kind:
+        reason = "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito"
+    result = None
+    if stage != "review":
+        status = "windows-build" if stage == "playable" else "in-progress"
+        tags = ["recomp-tracker", kind, "windows" if stage == "playable" else "em-desenvolvimento", status]
+        if stage == "playable":
+            if any(r.get("prerelease") for r in release_list if not r.get("draft")):
+                tags.append("pode-ser-beta")
+        else:
+            tags.append("windows-nao-confirmado")
+        result = {"name": name, "project": name,
+                  "repository": repo, "folderName": format_slug("Recomp-github-" + repo.replace("/", "-")),
+                  "tags": tags, "appIconUrl": None}
+    audit = {"host": "github", "repo": repo, "classification": stage,
+             "manifest_from_author": False, "type": [kind] if kind else [],
+             "status": "windows-build" if stage == "playable" else "in-progress" if dev else "not-reported",
+             "declared_windows": bool(re.search(r"\bwindows\b", str(meta.get("description") or "") + "\n" + readme[:2600], re.I)),
+             "windows_asset_detected": windows_asset,
+             "matched_release_assets": asset_names_found,
+             "reason": reason, "evidence": "https://github.com/" + repo,
+             "evidence_urls": ["https://github.com/" + repo,
+                               "https://github.com/" + repo + "/releases"]}
+    return result, stage, audit
+
+
 def metadata(api: API, host: str, repo: str) -> dict | None:
     if host == "github":
         return api.get(github_api(repo), missing_ok=True)
@@ -174,7 +320,7 @@ def asset_names(release: dict, host: str) -> list[str]:
 
 def has_windows_asset(release_list: list, host: str) -> tuple[bool, list[str]]:
     for release in release_list:
-        if host == "github" and (release.get("draft") or release.get("prerelease")):
+        if host == "github" and release.get("draft"):
             continue
         candidates = [n for n in asset_names(release, host)
                       if WIN_NAME.search(n) and ASSET_EXTENSION.search(n)
@@ -196,6 +342,86 @@ def windows_target(value: Any) -> bool:
 
 def format_slug(text: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "-", text).strip("-")[:90]
+
+
+# Fontes que ja vinham como capas de jogos no arquivo base de 114 itens.
+# Nao reaproveitamos avatares de perfis do GitHub automaticamente.
+LEGACY_ART_DOMAINS = {
+    "cdn.cloudflare.steamstatic.com",
+    "cdn.akamai.steamstatic.com",
+    "shared.fastly.steamstatic.com",
+    "steamcdn-a.akamaihd.net",
+}
+LEGACY_APPROVED_URLS = {
+    "https://raw.githubusercontent.com/yairm210/Unciv/master/docs/assets/Icon.png",
+}
+
+
+def validate_icon_url(value: Any, key: str) -> str | None:
+    """Aceita somente URL de imagem HTTPS preenchida manualmente, ou null.
+
+    Nao faz requisicoes de rede: nenhum token ou arquivo local fica exposto.
+    """
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise ValueError(f"Imagem de {key}: use uma URL HTTPS ou null")
+    value = value.strip()
+    from urllib.parse import urlsplit
+    parsed = urlsplit(value)
+    if (len(value) > 2048 or parsed.scheme != "https" or not parsed.hostname
+            or parsed.username or parsed.password):
+        raise ValueError(f"Imagem de {key}: URL HTTPS invalida")
+    return value
+
+
+def legacy_image_approved(value: Any) -> bool:
+    """Somente artes previamente curadas (nao avatares de perfil)."""
+    if not isinstance(value, str):
+        return False
+    from urllib.parse import urlsplit
+    parsed = urlsplit(value)
+    return parsed.scheme == "https" and (
+        parsed.hostname in LEGACY_ART_DOMAINS or value in LEGACY_APPROVED_URLS
+    )
+
+
+def curated_image(host: str, repo: str, fallback: Any, settings: dict) -> str | None:
+    """Prioridade: imagem escolhida > override antigo > arte confiavel da base > neutro.
+
+    'null' explicito nos overrides significa remover a imagem. Os icones de
+    snapshots antigos nao sao usados como fonte automatica.
+    """
+    full_key = f"{host}:{repo}"
+    images = settings.get("images", {})
+    if not isinstance(images, dict):
+        raise ValueError("config/overrides.json: images deve ser objeto")
+    repository_options = settings.get("repositories", {})
+    if not isinstance(repository_options, dict):
+        raise ValueError("config/overrides.json: repositories deve ser objeto")
+    for key in (full_key, repo):
+        if key in images:
+            return validate_icon_url(images[key], key)
+    for key in (full_key, repo):
+        options = repository_options.get(key)
+        if isinstance(options, dict) and "appIconUrl" in options:
+            return validate_icon_url(options["appIconUrl"], key)
+    if legacy_image_approved(fallback):
+        return fallback
+    return None
+
+
+def with_curated_images(entries: list[dict], settings: dict, *, legacy: bool = False) -> list[dict]:
+    result = []
+    for original in entries:
+        entry = original.copy()
+        host = entry.get("repositorySource", "github")
+        repo = entry.get("repository", "")
+        # Para repositórios detectados online não confiar em URLs antigas no snapshot.
+        fallback = entry.get("appIconUrl") if legacy else None
+        entry["appIconUrl"] = curated_image(host, repo, fallback, settings)
+        result.append(entry)
+    return result
 
 
 def make_entry(host: str, repo: str, record: dict, meta: dict, overrides: dict) -> tuple[dict | None, str, dict]:
@@ -234,10 +460,12 @@ def make_entry(host: str, repo: str, record: dict, meta: dict, overrides: dict) 
     if host == "gitlab":
         entry["repositorySource"] = "gitlab"
     custom = overrides.get(f"{host}:{repo}", {})
-    if isinstance(custom.get("appIconUrl"), str) and custom["appIconUrl"].startswith("https://"):
-        entry["appIconUrl"] = custom["appIconUrl"]
+    if not isinstance(custom, dict):
+        raise ValueError(f"Override invalido: {host}:{repo}")
     if isinstance(custom.get("releaseAssetFilter"), str) and custom["releaseAssetFilter"].strip():
         entry["releaseAssetFilter"] = custom["releaseAssetFilter"].strip()
+    # Imagem aplicada na etapa final da montagem do JSON. Isso permite
+    # aplicar mudancas de configuracao mesmo a projetos ainda no snapshot.
     # Outros metadados NAO sao incluidos no JSON, para nao depender de campos
     # nao documentados pelo Quiver.
     return entry, category, info
@@ -263,16 +491,28 @@ def regenerate(api: API, base: Path, *, discovery: bool = True) -> dict:
     cached = read_json(base / "data/discovered_repos.json").get("repositories", [])
     seeds = config.get("repositories", [])
     discovered = []
-    if discovery and config.get("autoDiscoverGitHubManifests"):
-        if not api.github_token:
-            print("AVISO: sem GITHUB_TOKEN; descoberta global nao executada", file=sys.stderr)
-        else:
-            # Uma falha na descoberta nao bloqueia a atualizacao dos repositorios
-            # ja selecionados. O cache preserva descobertas anteriores.
+    search_stats = {"repository_search": "disabled"}
+    if discovery and api.github_token:
+        # Busca de repositórios primeiro: não depende de .recomp.json.
+        if config.get("autoDiscoverGitHubRepositories", True):
             try:
-                discovered = discover_github(api, max(1, min(5, int(config.get("autoDiscoverMaxPages", 2)))))
+                queries = config.get("repositorySearchQueries", DEFAULT_REPOSITORY_QUERIES)
+                if not isinstance(queries, list) or len(queries) > 20:
+                    raise ValueError("repositorySearchQueries deve ser uma lista com até 20 termos")
+                repo_results, search_stats = discover_repository_search(
+                    api, queries, max(1, min(3, int(config.get("repositorySearchPages", 1)))),
+                    max(10, min(100, int(config.get("repositorySearchPerPage", 50)))))
+                discovered.extend(repo_results)
             except FetchFailure as ex:
-                print(f"AVISO: descoberta indisponivel; usando cache: {ex}", file=sys.stderr)
+                search_stats = {"error": str(ex)}
+                print(f"AVISO: busca de repositórios indisponível: {ex}", file=sys.stderr)
+        if config.get("autoDiscoverGitHubManifests"):
+            try:
+                discovered.extend(discover_github(api, max(1, min(3, int(config.get("autoDiscoverMaxPages", 1))))))
+            except FetchFailure as ex:
+                print(f"AVISO: busca de manifestos indisponível: {ex}", file=sys.stderr)
+    elif discovery:
+        print("AVISO: sem GITHUB_TOKEN; usando cache e fontes explícitas", file=sys.stderr)
     candidates = {}
     for c in [*cached, *discovered, *seeds]:
         host, repo = c.get("host", "github"), c.get("repo", "")
@@ -288,7 +528,7 @@ def regenerate(api: API, base: Path, *, discovery: bool = True) -> dict:
     snapshot_path = base / "data/snapshot.json"
     snapshot = read_json(snapshot_path) if snapshot_path.exists() else {"cursor": 0, "repositories": {}}
     previous = {k: v for k, v in snapshot.get("repositories", {}).items() if k in candidates}
-    all_keys = sorted(candidates)
+    all_keys = sorted(candidates, key=str.casefold)
     max_per_run = max(1, min(300, int(config.get("maxRepositoriesPerRun", 60))))
     cursor = int(snapshot.get("cursor", 0))
     start = cursor % len(all_keys) if all_keys else 0
@@ -305,15 +545,29 @@ def regenerate(api: API, base: Path, *, discovery: bool = True) -> dict:
             continue
         branch = meta.get("default_branch") or "main"
         own_manifest = manifest(api, host, repo, branch)
-        if own_manifest is None and key not in seed_keys:
-            previous.pop(key, None)
-            continue
         if own_manifest is not None:
             discovered_valid.append({"host": host, "repo": repo})
         release_list = releases(api, host, repo)
-        entry, category, info = make_entry(host, repo,
-            {"seed": c if c.get("name") else {}, "manifest": own_manifest, "releases": release_list},
-            meta, overrides.get("repositories", {}))
+        if own_manifest is None and key not in seed_keys and host == "github":
+            # Evidência do próprio autor + release. Sem autoidentificação: fila de revisão.
+            readme = get_readme(api, repo)
+            entry, category, info = classify_unmanifested(repo, meta, readme, release_list)
+        elif own_manifest is None and key not in seed_keys:
+            entry, category, info = None, "review", {
+                "host": host, "repo": repo, "classification": "review",
+                "reason": "Projeto sem manifesto ou verificação explícita", "evidence": f"https://gitlab.com/{repo}"}
+        else:
+            entry, category, info = make_entry(host, repo,
+                {"seed": c if c.get("name") else {}, "manifest": own_manifest, "releases": release_list},
+                meta, overrides.get("repositories", {}))
+            # Projetos descobertos com manifesto incompleto não ficam ocultos da auditoria.
+            if category == "ignored" and key not in seed_keys:
+                category = "review"
+                info["classification"] = "review"
+                info["reason"] = "Manifesto não confirma estado compatível com as duas listas"
+        info["discovered_by"] = c.get("discoveredBy", "manifest" if own_manifest else "curated_seed")
+        if c.get("matchedQueries"):
+            info["matched_queries"] = c["matchedQueries"]
         previous[key] = {"classification": category, "entry": entry, "audit": info}
     playable = [rec["entry"] for key, rec in sorted(previous.items())
                 if rec.get("classification") == "playable" and rec.get("entry")]
@@ -323,21 +577,32 @@ def regenerate(api: API, base: Path, *, discovery: bool = True) -> dict:
     developing = dedupe_entries(sorted(developing, key=lambda x: (x["name"].casefold(), x["repository"].casefold())))
     audit = [rec["audit"] for _, rec in sorted(previous.items())]
     pending = [k for k in all_keys if k not in previous]
-    # Base antiga preservada SOMENTE no combinado. A lista de jogaveis nao
-    # herda emuladores e outras entradas sem validacao de status de recomp.
+    review = [item for item in audit if item.get("classification") == "review"]
+    # Atualiza as imagens de TODAS as entradas em todo ciclo, inclusive as
+    # armazenadas no snapshot que nao foram revisitadas nesta rodada.
+    playable = with_curated_images(playable, overrides)
+    developing = with_curated_images(developing, overrides)
+    # Base antiga preservada SOMENTE no combinado; suas capas de jogos
+    # confiaveis podem ser reaproveitadas, mas avatares pessoais nao.
     legacy = read_json(base / "config/minha-lista-114.json").get("apps", [])
+    legacy = with_curated_images(legacy, overrides, legacy=True)
     combined = dedupe_entries([*playable, *developing, *legacy])
     payloads = {
         "windows-jogaveis.json": {"apps": playable},
         "em-desenvolvimento.json": {"apps": developing},
         "tudo-quiver.json": {"apps": combined},
+        "candidatos-revisao.json": {"review": review, "awaiting_first_check": pending,
+                                    "notice": "Não importar este relatório no Quiver; candidatos sem confirmação."},
         "relatorio.json": {"summary": {"playable_windows": len(playable),
                                        "development": len(developing),
                                        "combined_with_legacy": len(combined),
                                        "tracked": len(audit),
                                        "awaiting_first_check": len(pending),
                                        "checked_this_run": len(picked),
-                                       "ignored": sum(i.get("classification") not in ("playable", "development") for i in audit)},
+                                       "ignored": sum(i.get("classification") not in ("playable", "development") for i in audit),
+                                       "with_images": sum(bool(a.get("appIconUrl")) for a in combined),
+                                       "review_candidates": len(review),
+                                       "search": search_stats},
                            "projects": audit,
                            "not_yet_checked_repositories": pending}
     }

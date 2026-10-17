@@ -1,49 +1,49 @@
 {
   "summary": {
     "generator_version": "3.3.1",
-    "candidate_repositories": 3238,
-    "first_checks_scheduled": 55,
-    "playable_windows": 158,
-    "development": 89,
-    "combined_with_legacy": 358,
-    "tracked": 681,
-    "awaiting_first_check": 2557,
+    "candidate_repositories": 3289,
+    "first_checks_scheduled": 57,
+    "playable_windows": 165,
+    "development": 99,
+    "combined_with_legacy": 375,
+    "tracked": 738,
+    "awaiting_first_check": 2551,
     "checked_this_run": 60,
-    "ignored": 434,
-    "with_images": 164,
+    "ignored": 474,
+    "with_images": 180,
     "image_discovery": {
-      "scanned": 40,
-      "applied": 77,
-      "errors": 10,
+      "scanned": 39,
+      "applied": 86,
+      "errors": 11,
       "rate_limited": false,
       "negative_cache_invalidated": 3,
-      "still_to_scan": 73,
-      "remaining_without_image": 256
+      "still_to_scan": 51,
+      "remaining_without_image": 264
     },
     "steamgriddb": {
       "enabled": true,
-      "queries": 24,
-      "matches": 10,
-      "applied": 62,
-      "ambiguous": 1,
-      "no_match": 13,
+      "queries": 21,
+      "matches": 7,
+      "applied": 69,
+      "ambiguous": 0,
+      "no_match": 14,
       "no_art": 0,
       "errors": 0,
       "rate_limited": false,
-      "pending": 24,
+      "pending": 21,
       "negative_cache_invalidated": 0,
-      "reused": 52
+      "reused": 62
     },
-    "review_candidates": 391,
+    "review_candidates": 431,
     "search": {
       "queries": 10,
       "requests": 19,
       "incomplete_queries": [],
-      "returned": 1390,
-      "sort": "best-match",
+      "returned": 1817,
+      "sort": "updated",
       "pages": [
         1,
-        6
+        2
       ]
     }
   },
@@ -874,6 +874,27 @@
         "\"static recompilation\" in:description",
         "\"recompilation\" \"Windows\" in:description",
         "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "BhatnagarPratham/recomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [],
+      "status": "in-progress",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Sem autoidentificação de recompilação/port pelo autor",
+      "evidence": "https://github.com/BhatnagarPratham/recomp",
+      "evidence_urls": [
+        "https://github.com/BhatnagarPratham/recomp",
+        "https://github.com/BhatnagarPratham/recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name"
       ]
     },
     {
@@ -2259,6 +2280,89 @@
     },
     {
       "host": "github",
+      "repo": "DarioSamo/MMRecompCrazyMoonMod",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/DarioSamo/MMRecompCrazyMoonMod",
+      "evidence_urls": [
+        "https://github.com/DarioSamo/MMRecompCrazyMoonMod",
+        "https://github.com/DarioSamo/MMRecompCrazyMoonMod/releases"
+      ],
+      "discovered_by": "curated_seed"
+    },
+    {
+      "host": "github",
+      "repo": "Darkluiside305/Extreme-G-2-Recompilation",
+      "classification": "development",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "in-progress",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Autor declarou explicitamente que o projeto está em desenvolvimento",
+      "evidence": "https://github.com/Darkluiside305/Extreme-G-2-Recompilation",
+      "evidence_urls": [
+        "https://github.com/Darkluiside305/Extreme-G-2-Recompilation",
+        "https://github.com/Darkluiside305/Extreme-G-2-Recompilation/releases"
+      ],
+      "discovered_by": "curated_seed"
+    },
+    {
+      "host": "github",
+      "repo": "Darkstrier/dsda-wasm-doom",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "port"
+      ],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/Darkstrier/dsda-wasm-doom",
+      "evidence_urls": [
+        "https://github.com/Darkstrier/dsda-wasm-doom",
+        "https://github.com/Darkstrier/dsda-wasm-doom/releases"
+      ],
+      "discovered_by": "curated_seed"
+    },
+    {
+      "host": "github",
+      "repo": "Darkuzz/recompile-radar",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/Darkuzz/recompile-radar",
+      "evidence_urls": [
+        "https://github.com/Darkuzz/recompile-radar",
+        "https://github.com/Darkuzz/recompile-radar/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "Data3rr/Res0luti0n",
       "classification": "review",
       "manifest_from_author": false,
@@ -2273,10 +2377,7 @@
         "https://github.com/Data3rr/Res0luti0n",
         "https://github.com/Data3rr/Res0luti0n/releases"
       ],
-      "discovered_by": "repository_search",
-      "matched_queries": [
-        "\"recompilation\" \"Windows\" in:description"
-      ]
+      "discovered_by": "curated_seed"
     },
     {
       "host": "github",
@@ -2408,6 +2509,34 @@
       "discovered_by": "repository_search",
       "matched_queries": [
         "topic:static-recompilation"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "DrummingBird1/gow-psp-recomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/DrummingBird1/gow-psp-recomp",
+      "evidence_urls": [
+        "https://github.com/DrummingBird1/gow-psp-recomp",
+        "https://github.com/DrummingBird1/gow-psp-recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:description",
+        "\"recompilation\" \"native\" in:description",
+        "\"native PC port\" in:description",
+        "recomp in:name",
+        "topic:static-recompilation",
+        "\"static recompilation\" in:readme"
       ]
     },
     {
@@ -2687,6 +2816,29 @@
         "\"static recompilation\" in:description",
         "recomp in:name",
         "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "GabrielBarbosa0/Fruit-Ninja-Kinect-Recomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/GabrielBarbosa0/Fruit-Ninja-Kinect-Recomp",
+      "evidence_urls": [
+        "https://github.com/GabrielBarbosa0/Fruit-Ninja-Kinect-Recomp",
+        "https://github.com/GabrielBarbosa0/Fruit-Ninja-Kinect-Recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name"
       ]
     },
     {
@@ -3005,6 +3157,27 @@
     },
     {
       "host": "github",
+      "repo": "ImLunaHey/alpha-sapphire-recomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Sem autoidentificação de recompilação/port pelo autor",
+      "evidence": "https://github.com/ImLunaHey/alpha-sapphire-recomp",
+      "evidence_urls": [
+        "https://github.com/ImLunaHey/alpha-sapphire-recomp",
+        "https://github.com/ImLunaHey/alpha-sapphire-recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "Invictus-potens/smt4-recomp",
       "classification": "review",
       "manifest_from_author": false,
@@ -3124,6 +3297,29 @@
     },
     {
       "host": "github",
+      "repo": "JackRushante/DBZ-Super-Saiya-Densetsu-Rust",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "dbz-ssd-recompiled-windows.zip"
+      ],
+      "reason": "Sem autoidentificação de recompilação/port pelo autor",
+      "evidence": "https://github.com/JackRushante/DBZ-Super-Saiya-Densetsu-Rust",
+      "evidence_urls": [
+        "https://github.com/JackRushante/DBZ-Super-Saiya-Densetsu-Rust",
+        "https://github.com/JackRushante/DBZ-Super-Saiya-Densetsu-Rust/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "JackandBeans/Snap64RecompMods",
       "classification": "review",
       "manifest_from_author": false,
@@ -3217,6 +3413,29 @@
       "discovered_by": "repository_search",
       "matched_queries": [
         "\"native PC port\" in:description"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "JimLundin/sm-decomp",
+      "classification": "development",
+      "manifest_from_author": false,
+      "type": [
+        "port"
+      ],
+      "status": "in-progress",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Autor declarou explicitamente que o projeto está em desenvolvimento",
+      "evidence": "https://github.com/JimLundin/sm-decomp",
+      "evidence_urls": [
+        "https://github.com/JimLundin/sm-decomp",
+        "https://github.com/JimLundin/sm-decomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"source port\" in:description"
       ]
     },
     {
@@ -3407,6 +3626,31 @@
       "matched_release_assets": [],
       "classification": "development",
       "evidence": "https://github.com/KIexster/god-of-war-recomp"
+    },
+    {
+      "host": "github",
+      "repo": "KaikoClanworth1/wwe-crush-hour-pc",
+      "classification": "playable",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "windows-build",
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "WWE-Crush-Hour-PC-alpha-0.0.1.zip"
+      ],
+      "reason": "Release não-draft contém pacote explicitamente nomeado para Windows (pode ser beta)",
+      "evidence": "https://github.com/KaikoClanworth1/wwe-crush-hour-pc",
+      "evidence_urls": [
+        "https://github.com/KaikoClanworth1/wwe-crush-hour-pc",
+        "https://github.com/KaikoClanworth1/wwe-crush-hour-pc/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"native PC port\" in:description"
+      ]
     },
     {
       "host": "github",
@@ -3726,6 +3970,29 @@
       "discovered_by": "repository_search",
       "matched_queries": [
         "\"recompilation\" \"native\" in:description"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "LucasRovere/ps2-revival",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/LucasRovere/ps2-revival",
+      "evidence_urls": [
+        "https://github.com/LucasRovere/ps2-revival",
+        "https://github.com/LucasRovere/ps2-revival/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:readme"
       ]
     },
     {
@@ -4232,6 +4499,27 @@
     },
     {
       "host": "github",
+      "repo": "Nexhas28/gen1recomp-mod-browser",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Sem autoidentificação de recompilação/port pelo autor",
+      "evidence": "https://github.com/Nexhas28/gen1recomp-mod-browser",
+      "evidence_urls": [
+        "https://github.com/Nexhas28/gen1recomp-mod-browser",
+        "https://github.com/Nexhas28/gen1recomp-mod-browser/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "Nicktendonick/SummonNightSwordcraftStory3Recomp",
       "classification": "playable",
       "manifest_from_author": false,
@@ -4343,6 +4631,34 @@
     },
     {
       "host": "github",
+      "repo": "OAleex/ShaolinMonksRecomp",
+      "classification": "playable",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "windows-build",
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "ShaolinMonksRecomp-0.1.0-Windows-x64.zip"
+      ],
+      "reason": "Release não-draft contém pacote explicitamente nomeado para Windows (pode ser beta)",
+      "evidence": "https://github.com/OAleex/ShaolinMonksRecomp",
+      "evidence_urls": [
+        "https://github.com/OAleex/ShaolinMonksRecomp",
+        "https://github.com/OAleex/ShaolinMonksRecomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:description",
+        "\"recompilation\" \"native\" in:description",
+        "recomp in:name",
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "OmkarK97/recomp",
       "classification": "review",
       "manifest_from_author": false,
@@ -4356,6 +4672,27 @@
       "evidence_urls": [
         "https://github.com/OmkarK97/recomp",
         "https://github.com/OmkarK97/recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "OneShot95/SCDA-recomp-4x-texture-pack",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Sem autoidentificação de recompilação/port pelo autor",
+      "evidence": "https://github.com/OneShot95/SCDA-recomp-4x-texture-pack",
+      "evidence_urls": [
+        "https://github.com/OneShot95/SCDA-recomp-4x-texture-pack",
+        "https://github.com/OneShot95/SCDA-recomp-4x-texture-pack/releases"
       ],
       "discovered_by": "repository_search",
       "matched_queries": [
@@ -4472,6 +4809,27 @@
       "discovered_by": "repository_search",
       "matched_queries": [
         "\"N64Recomp\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "PeriBluGaming/ToyStory2Recomp",
+      "status": "exploring",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "ToyStory2Recomp-v0.1.0-alpha-windows-x64.zip"
+      ],
+      "classification": "development",
+      "evidence": "https://github.com/PeriBluGaming/ToyStory2Recomp",
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name",
+        "\"static recompilation\" in:readme"
       ]
     },
     {
@@ -5298,6 +5656,29 @@
     },
     {
       "host": "github",
+      "repo": "TGP482/BLACK-XBERecomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/TGP482/BLACK-XBERecomp",
+      "evidence_urls": [
+        "https://github.com/TGP482/BLACK-XBERecomp",
+        "https://github.com/TGP482/BLACK-XBERecomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:description"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "TH3BACKLOG/SDBZ-Recomp-Public",
       "classification": "review",
       "manifest_from_author": false,
@@ -5370,6 +5751,52 @@
         "recomp in:name",
         "topic:static-recompilation",
         "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "TanookiStudios/SuperPunchOutRecomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "SuperPunchOut-Windows.zip"
+      ],
+      "reason": "Sem autoidentificação de recompilação/port pelo autor",
+      "evidence": "https://github.com/TanookiStudios/SuperPunchOutRecomp",
+      "evidence_urls": [
+        "https://github.com/TanookiStudios/SuperPunchOutRecomp",
+        "https://github.com/TanookiStudios/SuperPunchOutRecomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "TanookiStudios/TopGun2Recomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "TopGun2-Windows.zip"
+      ],
+      "reason": "Sem autoidentificação de recompilação/port pelo autor",
+      "evidence": "https://github.com/TanookiStudios/TopGun2Recomp",
+      "evidence_urls": [
+        "https://github.com/TanookiStudios/TopGun2Recomp",
+        "https://github.com/TanookiStudios/TopGun2Recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name"
       ]
     },
     {
@@ -5732,6 +6159,29 @@
     },
     {
       "host": "github",
+      "repo": "UVClay/Valor",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/UVClay/Valor",
+      "evidence_urls": [
+        "https://github.com/UVClay/Valor",
+        "https://github.com/UVClay/Valor/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "Ukkitan0/Getchu-3-PC",
       "classification": "review",
       "manifest_from_author": false,
@@ -5989,6 +6439,29 @@
       "matched_release_assets": [],
       "classification": "ignored",
       "evidence": "https://github.com/Wyrelade/Digimon-World-2-Decomp"
+    },
+    {
+      "host": "github",
+      "repo": "YJuDeAd/gow-ascension-pc-port",
+      "classification": "development",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "in-progress",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Autor declarou explicitamente que o projeto está em desenvolvimento",
+      "evidence": "https://github.com/YJuDeAd/gow-ascension-pc-port",
+      "evidence_urls": [
+        "https://github.com/YJuDeAd/gow-ascension-pc-port",
+        "https://github.com/YJuDeAd/gow-ascension-pc-port/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:readme"
+      ]
     },
     {
       "host": "github",
@@ -6694,6 +7167,31 @@
     },
     {
       "host": "github",
+      "repo": "arnaldolima1/gow-ascension-pc",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/arnaldolima1/gow-ascension-pc",
+      "evidence_urls": [
+        "https://github.com/arnaldolima1/gow-ascension-pc",
+        "https://github.com/arnaldolima1/gow-ascension-pc/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:description",
+        "\"recompilation\" \"native\" in:description",
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "arnaldolima1/gow-chains-of-olympus-pc",
       "classification": "review",
       "manifest_from_author": false,
@@ -7077,6 +7575,30 @@
       "discovered_by": "repository_search",
       "matched_queries": [
         "\"source port\" in:description"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "bifftannen1/Dead-Space-2-Recomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/bifftannen1/Dead-Space-2-Recomp",
+      "evidence_urls": [
+        "https://github.com/bifftannen1/Dead-Space-2-Recomp",
+        "https://github.com/bifftannen1/Dead-Space-2-Recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name",
+        "\"static recompilation\" in:readme"
       ]
     },
     {
@@ -8673,6 +9195,27 @@
     },
     {
       "host": "github",
+      "repo": "chunma-san/awesome-toolbox",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Sem autoidentificação de recompilação/port pelo autor",
+      "evidence": "https://github.com/chunma-san/awesome-toolbox",
+      "evidence_urls": [
+        "https://github.com/chunma-san/awesome-toolbox",
+        "https://github.com/chunma-san/awesome-toolbox/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "chvjak/DescentVR",
       "classification": "review",
       "manifest_from_author": false,
@@ -9482,6 +10025,235 @@
     },
     {
       "host": "github",
+      "repo": "darkhaven3/drott",
+      "classification": "playable",
+      "manifest_from_author": false,
+      "type": [
+        "port"
+      ],
+      "status": "windows-build",
+      "declared_windows": false,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "drott-0-1-1-win32.zip"
+      ],
+      "reason": "Release não-draft contém pacote explicitamente nomeado para Windows (pode ser beta)",
+      "evidence": "https://github.com/darkhaven3/drott",
+      "evidence_urls": [
+        "https://github.com/darkhaven3/drott",
+        "https://github.com/darkhaven3/drott/releases"
+      ],
+      "discovered_by": "curated_seed"
+    },
+    {
+      "host": "github",
+      "repo": "darkhaven3/windowcaster",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "port"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/darkhaven3/windowcaster",
+      "evidence_urls": [
+        "https://github.com/darkhaven3/windowcaster",
+        "https://github.com/darkhaven3/windowcaster/releases"
+      ],
+      "discovered_by": "curated_seed"
+    },
+    {
+      "host": "github",
+      "repo": "darkliquid/ironwail-go",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "port"
+      ],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/darkliquid/ironwail-go",
+      "evidence_urls": [
+        "https://github.com/darkliquid/ironwail-go",
+        "https://github.com/darkliquid/ironwail-go/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"source port\" in:description"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "darkuni/alien-crush-returns-recomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/darkuni/alien-crush-returns-recomp",
+      "evidence_urls": [
+        "https://github.com/darkuni/alien-crush-returns-recomp",
+        "https://github.com/darkuni/alien-crush-returns-recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name",
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "darkuni/castlevania-rebirth-recomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/darkuni/castlevania-rebirth-recomp",
+      "evidence_urls": [
+        "https://github.com/darkuni/castlevania-rebirth-recomp",
+        "https://github.com/darkuni/castlevania-rebirth-recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name",
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "darkuni/contra-rebirth-recomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/darkuni/contra-rebirth-recomp",
+      "evidence_urls": [
+        "https://github.com/darkuni/contra-rebirth-recomp",
+        "https://github.com/darkuni/contra-rebirth-recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name",
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "darkuni/gradius-rebirth-recomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/darkuni/gradius-rebirth-recomp",
+      "evidence_urls": [
+        "https://github.com/darkuni/gradius-rebirth-recomp",
+        "https://github.com/darkuni/gradius-rebirth-recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name",
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "darkxex/PS5_Celeste",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "port"
+      ],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/darkxex/PS5_Celeste",
+      "evidence_urls": [
+        "https://github.com/darkxex/PS5_Celeste",
+        "https://github.com/darkxex/PS5_Celeste/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"source port\" in:description"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "darvell/GodOfThunder-Port",
+      "classification": "playable",
+      "manifest_from_author": false,
+      "type": [
+        "port"
+      ],
+      "status": "windows-build",
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "GodOfThunder-Windows-x86_64.zip"
+      ],
+      "reason": "Release não-draft contém pacote explicitamente nomeado para Windows (pode ser beta)",
+      "evidence": "https://github.com/darvell/GodOfThunder-Port",
+      "evidence_urls": [
+        "https://github.com/darvell/GodOfThunder-Port",
+        "https://github.com/darvell/GodOfThunder-Port/releases"
+      ],
+      "discovered_by": "curated_seed"
+    },
+    {
+      "host": "github",
+      "repo": "datibrr/ae3-pc",
+      "classification": "development",
+      "manifest_from_author": false,
+      "type": [
+        "port"
+      ],
+      "status": "in-progress",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Autor declarou explicitamente que o projeto está em desenvolvimento",
+      "evidence": "https://github.com/datibrr/ae3-pc",
+      "evidence_urls": [
+        "https://github.com/datibrr/ae3-pc",
+        "https://github.com/datibrr/ae3-pc/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"native PC port\" in:description"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "davidkalil10/Heroes-Lore-2-The-Knight-of-Frozen_Sea-Recomp",
       "classification": "review",
       "manifest_from_author": false,
@@ -9505,6 +10277,103 @@
     },
     {
       "host": "github",
+      "repo": "davidxn/GZDoom-Builder",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "port"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/davidxn/GZDoom-Builder",
+      "evidence_urls": [
+        "https://github.com/davidxn/GZDoom-Builder",
+        "https://github.com/davidxn/GZDoom-Builder/releases"
+      ],
+      "discovered_by": "curated_seed"
+    },
+    {
+      "host": "github",
+      "repo": "dawoodtogoo2020-code/folklore-native-port",
+      "status": "exploring",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/dawoodtogoo2020-code/folklore-native-port",
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"recompilation\" \"native\" in:description"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "dayvight/mangayomi-sources",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Sem autoidentificação de recompilação/port pelo autor",
+      "evidence": "https://github.com/dayvight/mangayomi-sources",
+      "evidence_urls": [
+        "https://github.com/dayvight/mangayomi-sources",
+        "https://github.com/dayvight/mangayomi-sources/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"source port\" in:description"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "dburles/recompose-forms",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Sem autoidentificação de recompilação/port pelo autor",
+      "evidence": "https://github.com/dburles/recompose-forms",
+      "evidence_urls": [
+        "https://github.com/dburles/recompose-forms",
+        "https://github.com/dburles/recompose-forms/releases"
+      ],
+      "discovered_by": "curated_seed"
+    },
+    {
+      "host": "github",
+      "repo": "dcvz/recomp-docker",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/dcvz/recomp-docker",
+      "evidence_urls": [
+        "https://github.com/dcvz/recomp-docker",
+        "https://github.com/dcvz/recomp-docker/releases"
+      ],
+      "discovered_by": "curated_seed"
+    },
+    {
+      "host": "github",
       "repo": "deckyfx/dcb-pc-port",
       "classification": "review",
       "manifest_from_author": false,
@@ -9524,6 +10393,30 @@
       "discovered_by": "repository_search",
       "matched_queries": [
         "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "dfdx047/Dragon-Burst",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/dfdx047/Dragon-Burst",
+      "evidence_urls": [
+        "https://github.com/dfdx047/Dragon-Burst",
+        "https://github.com/dfdx047/Dragon-Burst/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:description",
+        "\"recompilation\" \"native\" in:description"
       ]
     },
     {
@@ -9808,6 +10701,49 @@
     },
     {
       "host": "github",
+      "repo": "ethannicholas/gcn-recomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/ethannicholas/gcn-recomp",
+      "evidence_urls": [
+        "https://github.com/ethannicholas/gcn-recomp",
+        "https://github.com/ethannicholas/gcn-recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name",
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "ethannicholas/prime-recomp",
+      "status": "in-progress",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "development",
+      "evidence": "https://github.com/ethannicholas/prime-recomp",
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name",
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "exyled/Xenogears-PC",
       "classification": "review",
       "manifest_from_author": false,
@@ -10050,6 +10986,29 @@
     },
     {
       "host": "github",
+      "repo": "fmucci/AnyPS1",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/fmucci/AnyPS1",
+      "evidence_urls": [
+        "https://github.com/fmucci/AnyPS1",
+        "https://github.com/fmucci/AnyPS1/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "freefrank/LostOdysseyRecomp",
       "status": "released",
       "type": [
@@ -10243,6 +11202,55 @@
     },
     {
       "host": "github",
+      "repo": "griches/EternalDarknessRecomp",
+      "classification": "playable",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "windows-build",
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "EternalDarkness-windows-x64-202610171452-3bda5d3.zip"
+      ],
+      "reason": "Release não-draft contém pacote explicitamente nomeado para Windows (pode ser beta)",
+      "evidence": "https://github.com/griches/EternalDarknessRecomp",
+      "evidence_urls": [
+        "https://github.com/griches/EternalDarknessRecomp",
+        "https://github.com/griches/EternalDarknessRecomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:description",
+        "\"recompilation\" \"Windows\" in:description",
+        "recomp in:name",
+        "topic:static-recompilation"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "griches/PS5_EternalDarkness",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Sem autoidentificação de recompilação/port pelo autor",
+      "evidence": "https://github.com/griches/PS5_EternalDarkness",
+      "evidence_urls": [
+        "https://github.com/griches/PS5_EternalDarkness",
+        "https://github.com/griches/PS5_EternalDarkness/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "topic:static-recompilation"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "hachi23/unicorn_overlord_pc",
       "classification": "review",
       "manifest_from_author": false,
@@ -10346,6 +11354,30 @@
       "discovered_by": "repository_search",
       "matched_queries": [
         "\"N64Recomp\" in:readme",
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "i2kiselev/fm4-static-recomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/i2kiselev/fm4-static-recomp",
+      "evidence_urls": [
+        "https://github.com/i2kiselev/fm4-static-recomp",
+        "https://github.com/i2kiselev/fm4-static-recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name",
         "\"static recompilation\" in:readme"
       ]
     },
@@ -10587,6 +11619,31 @@
       "discovered_by": "repository_search",
       "matched_queries": [
         "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "jcsix694/def-jam-vendetta-recomp",
+      "classification": "playable",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "windows-build",
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "Def-Jam-Vendetta-Recompiled-Windows.zip"
+      ],
+      "reason": "Release não-draft contém pacote explicitamente nomeado para Windows (pode ser beta)",
+      "evidence": "https://github.com/jcsix694/def-jam-vendetta-recomp",
+      "evidence_urls": [
+        "https://github.com/jcsix694/def-jam-vendetta-recomp",
+        "https://github.com/jcsix694/def-jam-vendetta-recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name"
       ]
     },
     {
@@ -10903,6 +11960,31 @@
       "discovered_by": "repository_search",
       "matched_queries": [
         "\"recompilation\" \"native\" in:description"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "josiahg2502-glitch/NewSuperPaperBros",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/josiahg2502-glitch/NewSuperPaperBros",
+      "evidence_urls": [
+        "https://github.com/josiahg2502-glitch/NewSuperPaperBros",
+        "https://github.com/josiahg2502-glitch/NewSuperPaperBros/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:description",
+        "\"recompilation\" \"native\" in:description",
+        "\"native PC port\" in:description"
       ]
     },
     {
@@ -11226,6 +12308,29 @@
     },
     {
       "host": "github",
+      "repo": "linuxkafe/SimCity-3DS-Port",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/linuxkafe/SimCity-3DS-Port",
+      "evidence_urls": [
+        "https://github.com/linuxkafe/SimCity-3DS-Port",
+        "https://github.com/linuxkafe/SimCity-3DS-Port/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:description"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "linuxkafe/Utopia-SNES-Static-Recomp",
       "status": "in-development",
       "type": [
@@ -11287,6 +12392,25 @@
       "discovered_by": "repository_search",
       "matched_queries": [
         "\"native PC port\" in:description"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "lunasvalle02-design/DarkHarmony",
+      "status": "playable",
+      "type": [
+        "recomp"
+      ],
+      "manifest_from_author": true,
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "classification": "review",
+      "evidence": "https://github.com/lunasvalle02-design/DarkHarmony",
+      "reason": "Manifesto não confirma estado compatível com as duas listas",
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:readme"
       ]
     },
     {
@@ -11484,6 +12608,30 @@
     },
     {
       "host": "github",
+      "repo": "masuexe/brutalmario-recomp",
+      "classification": "development",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "in-progress",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Autor declarou explicitamente que o projeto está em desenvolvimento",
+      "evidence": "https://github.com/masuexe/brutalmario-recomp",
+      "evidence_urls": [
+        "https://github.com/masuexe/brutalmario-recomp",
+        "https://github.com/masuexe/brutalmario-recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name",
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "matpdev/SaintSeiyaRecomp",
       "classification": "review",
       "manifest_from_author": false,
@@ -11594,6 +12742,27 @@
         "\"recompilation\" \"native\" in:description",
         "\"native PC port\" in:description",
         "topic:static-recompilation"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "mehregan59/cali-recomp-app",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [],
+      "status": "not-reported",
+      "declared_windows": false,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Sem autoidentificação de recompilação/port pelo autor",
+      "evidence": "https://github.com/mehregan59/cali-recomp-app",
+      "evidence_urls": [
+        "https://github.com/mehregan59/cali-recomp-app",
+        "https://github.com/mehregan59/cali-recomp-app/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name"
       ]
     },
     {
@@ -12266,6 +13435,87 @@
       "discovered_by": "repository_search",
       "matched_queries": [
         "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "nefariousjosiah/WWE-SVR2008-RECOMP",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/nefariousjosiah/WWE-SVR2008-RECOMP",
+      "evidence_urls": [
+        "https://github.com/nefariousjosiah/WWE-SVR2008-RECOMP",
+        "https://github.com/nefariousjosiah/WWE-SVR2008-RECOMP/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:description",
+        "\"recompilation\" \"Windows\" in:description",
+        "\"recompilation\" \"native\" in:description",
+        "\"native PC port\" in:description",
+        "recomp in:name"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "nefariousjosiah/WWE-SVR2009-RECOMP",
+      "classification": "development",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "in-progress",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Autor declarou explicitamente que o projeto está em desenvolvimento",
+      "evidence": "https://github.com/nefariousjosiah/WWE-SVR2009-RECOMP",
+      "evidence_urls": [
+        "https://github.com/nefariousjosiah/WWE-SVR2009-RECOMP",
+        "https://github.com/nefariousjosiah/WWE-SVR2009-RECOMP/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:description",
+        "\"recompilation\" \"Windows\" in:description",
+        "\"recompilation\" \"native\" in:description",
+        "\"native PC port\" in:description",
+        "recomp in:name"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "nefariousjosiah/WWE-SVR2010-RECOMP",
+      "classification": "development",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "in-progress",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Autor declarou explicitamente que o projeto está em desenvolvimento",
+      "evidence": "https://github.com/nefariousjosiah/WWE-SVR2010-RECOMP",
+      "evidence_urls": [
+        "https://github.com/nefariousjosiah/WWE-SVR2010-RECOMP",
+        "https://github.com/nefariousjosiah/WWE-SVR2010-RECOMP/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:description",
+        "\"recompilation\" \"Windows\" in:description",
+        "\"recompilation\" \"native\" in:description",
+        "\"native PC port\" in:description",
+        "recomp in:name"
       ]
     },
     {
@@ -13505,6 +14755,30 @@
     },
     {
       "host": "github",
+      "repo": "sgush-vibe/TTT2Recomp",
+      "classification": "review",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "not-reported",
+      "declared_windows": true,
+      "windows_asset_detected": false,
+      "matched_release_assets": [],
+      "reason": "Tipo confirmado, mas sem pacote Windows nem estado de desenvolvimento explícito",
+      "evidence": "https://github.com/sgush-vibe/TTT2Recomp",
+      "evidence_urls": [
+        "https://github.com/sgush-vibe/TTT2Recomp",
+        "https://github.com/sgush-vibe/TTT2Recomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "recomp in:name",
+        "\"static recompilation\" in:readme"
+      ]
+    },
+    {
+      "host": "github",
       "repo": "shaneomac1337/WWE-AllStars-Recomp",
       "classification": "review",
       "manifest_from_author": false,
@@ -14175,6 +15449,35 @@
       "discovered_by": "repository_search",
       "matched_queries": [
         "\"recompilation\" \"native\" in:description"
+      ]
+    },
+    {
+      "host": "github",
+      "repo": "toowasmir/WebOfShadowsRecomp",
+      "classification": "playable",
+      "manifest_from_author": false,
+      "type": [
+        "recomp"
+      ],
+      "status": "windows-build",
+      "declared_windows": true,
+      "windows_asset_detected": true,
+      "matched_release_assets": [
+        "WoS_ReComp_Modern_Edition_v2.0_Win64.zip"
+      ],
+      "reason": "Release não-draft contém pacote explicitamente nomeado para Windows (pode ser beta)",
+      "evidence": "https://github.com/toowasmir/WebOfShadowsRecomp",
+      "evidence_urls": [
+        "https://github.com/toowasmir/WebOfShadowsRecomp",
+        "https://github.com/toowasmir/WebOfShadowsRecomp/releases"
+      ],
+      "discovered_by": "repository_search",
+      "matched_queries": [
+        "\"static recompilation\" in:description",
+        "\"recompilation\" \"Windows\" in:description",
+        "\"recompilation\" \"native\" in:description",
+        "recomp in:name",
+        "\"static recompilation\" in:readme"
       ]
     },
     {
@@ -14918,6 +16221,7 @@
     "github:AgitationSkeleton/lsw2ds-pc",
     "github:agnt-gg/gb-pokemon-rom-to-wasm",
     "github:agray0425/Mother3Recomp",
+    "github:agusgonbel-code/apex-recomp-app",
     "github:AH64-dll/DeepSea",
     "github:AH64-dll/RecompCore",
     "github:aharonahdoot/GXRuntime",
@@ -15042,6 +16346,7 @@
     "github:alienmelon/Fishy.js",
     "github:allan-simon/open-diabolo2",
     "github:alm6iri/Advanced-Stealth-Scanner",
+    "github:AlmazProud/metal-slug-3-recomp",
     "github:AlmazProud/metal-slug-x-recomp",
     "github:Almirante-Ming/b3_decompiled",
     "github:alphanu1/daytona-arcade-recomp",
@@ -15092,6 +16397,7 @@
     "github:Aoyagi01/Tutikumo",
     "github:apexJCL/burnout3-recomp",
     "github:ApfelTeeSaft/RebrewU",
+    "github:Apolinario-coder/SkyRecomp",
     "github:appetizermonster/Unity3D-RecompileDisabler",
     "github:aprowaz1-crypto/Real-recompile-",
     "github:AQUAVIEW-DAH/HHP-ML-Recomputations",
@@ -15109,7 +16415,6 @@
     "github:arin-s/doom-serial",
     "github:arjunkl/eDukeiOS",
     "github:arklanq/next-recompose-plugins",
-    "github:arnaldolima1/gow-ascension-pc",
     "github:ArnoKalavent/Space-Invaders-Decomp",
     "github:Arroheim/daily-news-agent",
     "github:arvo-concept/Hexagon-recomp",
@@ -15148,6 +16453,7 @@
     "github:benjamin-haas/doomdesk-engine",
     "github:benjamincordero/calculadora_recompras",
     "github:benjaminsanborn/civ4bts4mac",
+    "github:benjidotsh/LittleBigRecomp",
     "github:BENTUTORINGHELP/gzdoomincolab",
     "github:bep1s69/nfsmw-ios",
     "github:bernahu1795/bernahu1795.github.io",
@@ -15155,13 +16461,13 @@
     "github:bfox9900/RECOMPILER",
     "github:BFSA-association/RECOMP",
     "github:Biancamgn/recomp",
-    "github:bifftannen1/Dead-Space-2-Recomp",
     "github:bigmah/local_mb64",
     "github:BillTheHuman/hexes-heresy-hitmarkers",
     "github:birabittoh/NocturneRecomp-Mods",
     "github:birabittoh/TheDarknessReborn",
     "github:blizno23/Recomp",
     "github:bluecyborg-dev/cod_bo1-nx",
+    "github:bluecyborg-dev/conker-nx",
     "github:brandraft-exp/wiiu-recomp",
     "github:brankomatija/BustAGrooveRecompiled-Releases",
     "github:brickhu/recomp",
@@ -15205,7 +16511,6 @@
     "github:chrissotraidis/dinopad",
     "github:chrissotraidis/ottsel",
     "github:ChunchunQ/nascar09recomp",
-    "github:chunma-san/awesome-toolbox",
     "github:circledview/RecompositionTracker",
     "github:citrongames/Dora64",
     "github:citrongames/Dora64-3",
@@ -15246,7 +16551,9 @@
     "github:Crofty2002/Network-Scanning-Tool",
     "github:crossfithygie-collab/recomp",
     "github:CrownParkComputing/SWIV-Amiga",
+    "github:crusader290/NeoSMK",
     "github:crxssrazr93/mscharged-portmaster",
+    "github:cyberheater/Xbox-360-Quake4-decomp",
     "github:dalios94/Recomp",
     "github:danfromtico/goon-nx",
     "github:DanielCoffey1/Fable-Anniversary-PC",
@@ -15268,21 +16575,6 @@
     "github:danoomikee/recomp",
     "github:darchap/Skate3-Port",
     "github:Darhkfox/busters-hidden-treasure-pc",
-    "github:DarioSamo/MMRecompCrazyMoonMod",
-    "github:darkhaven3/drott",
-    "github:darkhaven3/windowcaster",
-    "github:darkliquid/ironwail-go",
-    "github:Darkluiside305/Extreme-G-2-Recompilation",
-    "github:Darkstrier/dsda-wasm-doom",
-    "github:Darkuzz/recompile-radar",
-    "github:darkxex/PS5_Celeste",
-    "github:darvell/GodOfThunder-Port",
-    "github:datibrr/ae3-pc",
-    "github:davidxn/GZDoom-Builder",
-    "github:dawoodtogoo2020-code/folklore-native-port",
-    "github:dayvight/mangayomi-sources",
-    "github:dburles/recompose-forms",
-    "github:dcvz/recomp-docker",
     "github:DE8MSH/drmario64-recomp-plus-android",
     "github:DeadZoneLuna/css-community",
     "github:deanrumsby/wolf3d",
@@ -15464,9 +16756,7 @@
     "github:esp-cpp/tpm-decomp",
     "github:ethannicholas/bluestorm-recomp",
     "github:ethannicholas/fzerogx-recomp",
-    "github:ethannicholas/gcn-recomp",
     "github:ethannicholas/mariokartdd-recomp",
-    "github:ethannicholas/prime-recomp",
     "github:evaa-01/adam",
     "github:evaa-01/somesay",
     "github:Evanator05/wDOOM",
@@ -15476,6 +16766,7 @@
     "github:exinton/TCP_Flooding_IP_SPoofing",
     "github:ExpansionPak/DolRecomp",
     "github:explosive-kite3497/DKC3Recomp",
+    "github:extremecodetv/scream-rs",
     "github:ExtremeGRecomp/ExtremeGRecomp",
     "github:ezequielkoulaksezian/portvault",
     "github:fabiangreffrath/test-wads",
@@ -15609,12 +16900,14 @@
     "github:GTTeancum/StarWars-RenegadeSquadron-PC",
     "github:GTTeancum/xmen-mutant-academy-2-pc",
     "github:GuhClemente/Karamelo",
+    "github:gui-s-antunes/recomp-games",
     "github:Gui-Tora/dmc-recomp",
     "github:guichafy/gunbound-recomp",
     "github:guimaraf/plusalpha-recomp",
     "github:gumpso/VSCodeAndroid",
     "github:guptaankur94/recomp-tracker",
     "github:GurekamDhillon/gd-melee-workspace",
+    "github:gymzatan/smt-nine-recomp",
     "github:h4mu/rott94",
     "github:hachesmorillas/recomp",
     "github:HaldiH/Project-OpenDIVA",
@@ -15669,6 +16962,7 @@
     "github:hopsypopsy8/OpenSource-Library",
     "github:Hortus1556/N.O.V.A-3-Decomp-Port",
     "github:hospi0/dk64-kr-patch",
+    "github:HossEz/fifa-world-cup-2014-recompiled",
     "github:hou-152/lifestyle-body-recomposition",
     "github:HowieDuhzit/B64ONE",
     "github:hpan-ports/tree-main",
@@ -15714,6 +17008,7 @@
     "github:InconspicuousCactus/SotC-XFF-Analyzer",
     "github:InconspicuousCactus/SotCStaticRecompilation",
     "github:InfidelRahul/Tegra124_mocha-r21.6",
+    "github:inflamesgo/motogp0910-recomp",
     "github:InitialDad/PS2Recomp-WoS-Findings",
     "github:intellistream/stateaxis-preemption-recompute",
     "github:Internon/inter-scapy",
@@ -15740,10 +17035,11 @@
     "github:JackandBeans/Snap64Recomp",
     "github:JackandBeans/Snap64RecompModTemplate",
     "github:JackandBeans/Snap64RecompSyms",
+    "github:JackEasons/github-trending",
     "github:jackl0phty/ansible-role-nmap",
     "github:JackMentch/mlb-recomp",
     "github:jackpoison-prog/RingOut",
-    "github:JackRushante/DBZ-Super-Saiya-Densetsu-Rust",
+    "github:Jacksonmlol/ResidentEvilPort",
     "github:Jacobwasbeast/mcwiiu-reconstructed",
     "github:jafshare/GithubTrending",
     "github:jaimeguillot/recomp",
@@ -15757,6 +17053,7 @@
     "github:jajdp/supermetroid-recomp-xbox",
     "github:Jakz/openmom",
     "github:Jameriquiah/smm",
+    "github:james2doyle/gbarecompx",
     "github:janisl/vavoom",
     "github:janvandorth/recomposable",
     "github:jasonpellerin-aisolutionist/federal-recompete-cliff",
@@ -15768,7 +17065,6 @@
     "github:Jazzkid0/mm-say-less",
     "github:jbreitfeller-sfix/jetpack-compose-recomposition-tests",
     "github:jbtuition304-web/rabbids-recarot",
-    "github:jcsix694/def-jam-vendetta-recomp",
     "github:Jebaitedneko/dtb-recompiler-bash",
     "github:jebsmartt/MarioGolf64Recomp",
     "github:jeddhor/EC7Wolf",
@@ -15820,6 +17116,7 @@
     "github:josiahg2502-glitch/KirbyRecomp",
     "github:josiahg2502-glitch/KirbySuperStarRecomp",
     "github:josiahg2502-glitch/PokemonMysteryDungeonRedRescueTeamRecomp",
+    "github:josiahg2502-glitch/Scooby-Doo-ReMasked",
     "github:JosuehCA/ADA-06-GITHUB-MCP",
     "github:jprzywoski/pgaie",
     "github:jr31415/RecompHeaven",
@@ -15857,7 +17154,6 @@
     "github:KABBOUCHI/starred",
     "github:Kaezzey/gt4-staticrecomp",
     "github:KaikoClanworth1/buffy-chaos-bleeds-pc",
-    "github:KaikoClanworth1/wwe-crush-hour-pc",
     "github:KaiserGranatapfel/GameCubeRecompiled",
     "github:kaiyao7/SwitchRecomp",
     "github:Kamvacodes2/recomp",
@@ -15930,6 +17226,7 @@
     "github:konchoor/airtel-iq",
     "github:KongaTime/PS5_EdgeOfTimeTitle",
     "github:KoreanSeats1/MCLA-4iOS",
+    "github:KoyFC/Hexlith",
     "github:KraftMacAndChee/Mercenaries-Recompiled",
     "github:Krutonium/zfs-recompress",
     "github:kruzeman/ReArrakis",
@@ -15975,7 +17272,6 @@
     "github:Link4Electronics/OpenXgpro",
     "github:LinkThePaleSystem64/linkthepales-mods-for-red-recomp",
     "github:Linkz64/HelloPSP-Recomp",
-    "github:linuxkafe/SimCity-3DS-Port",
     "github:linuxkafe/SuperMetroidDS",
     "github:liPillON/nughud_minimal",
     "github:liPillON/nughud_modern",
@@ -16064,6 +17360,7 @@
     "github:m-x-d/Heretic2R",
     "github:m0rrism0rris/quake-guide",
     "github:maaquin/links_awakening_3ds",
+    "github:Mabec-games/iss2000-recomp",
     "github:mabino/egatrek-port",
     "github:mac-recomp/pop2",
     "github:maci0/recompile-toolchains",
@@ -16281,6 +17578,7 @@
     "github:nacimoualla/orbis-on-macos",
     "github:nadiaholmquist/pc-ports.nix",
     "github:NagyD/SDLPoP",
+    "github:nakaionyt/ShadowOfTheColossus-PC-FrameGen",
     "github:namorton/ip_src_mod",
     "github:NaN-tic/trytond-sale_price_list_recompute_price",
     "github:NaN-tic/trytond-sale_recompute_price",
@@ -16302,9 +17600,6 @@
     "github:navjack/XenonRecomp",
     "github:Nazatric/PrototypeRecomp",
     "github:NeanSword/Aero-Stadium-2-FR",
-    "github:nefariousjosiah/WWE-SVR2008-RECOMP",
-    "github:nefariousjosiah/WWE-SVR2009-RECOMP",
-    "github:nefariousjosiah/WWE-SVR2010-RECOMP",
     "github:negroISO/CrashBandicoot-Launcher-iOS",
     "github:NeilSeligmann/tsfp-recomp",
     "github:Neirn/MMRecomp_FancyJumps",
@@ -16330,7 +17625,6 @@
     "github:NeverCookFirst/DimensionsModLoader",
     "github:NeverCookFirst/DimensionsSaveConverter",
     "github:newtonjin/Recomp",
-    "github:Nexhas28/gen1recomp-mod-browser",
     "github:Nick-Chapman/amnesty",
     "github:Nick-Chapman/bf",
     "github:Nick-Chapman/nesh",
@@ -16459,6 +17753,7 @@
     "github:phoenixlauncher/build-scripts",
     "github:Phonebooth/porter",
     "github:Phroster/DisruptorRecomp",
+    "github:piftee/gen1recomp-modern-ui-suite",
     "github:piklestf2/q2-config",
     "github:Pipyakas/fzero-gx-recomp",
     "github:piuzera/JUSDecomp",
@@ -16616,6 +17911,7 @@
     "github:RoqueDeicide/zDoomLauncher",
     "github:RossMeikleham/DXX-3DS",
     "github:RoundedSpine/nfs-most-wanted-ios",
+    "github:RoyalAce22/CellGov",
     "github:rozniak/Junkbot",
     "github:Rphillips1995/recomp-tracker",
     "github:rsantos722/imsa-wcr-m2-recomp",
@@ -16716,6 +18012,7 @@
     "github:Sinan-Karakaya/DQ8-Recompiled",
     "github:SirBraga/black-recomp",
     "github:SirBraga/turok2-recomp",
+    "github:SirCarls/cod3_REcomp_",
     "github:sirdankz/RapidGoemonRecompModTester",
     "github:SirDiabo/GithubLauncher",
     "github:SirDiabo/MK64RecompFOVConfig",
@@ -16975,6 +18272,7 @@
     "github:starAIdeveloper/speedbreaker",
     "github:stared/rusted-doom-launcher",
     "github:stark9000/java-embed-native-binary",
+    "github:starlightthehedgehog48-afk/Generations-Recomplied-Android-v.1-",
     "github:Staubgeborener/stars",
     "github:stefanplug/mercurius",
     "github:STEllAR-GROUP/miniapps",
@@ -17022,8 +18320,6 @@
     "github:Tam9rat/recomp",
     "github:tankuoping/recomp",
     "github:TanookiStudios/decomp-buddy",
-    "github:TanookiStudios/SuperPunchOutRecomp",
-    "github:TanookiStudios/TopGun2Recomp",
     "github:tcsenpai/gen1recomp-mod-browser",
     "github:tdprinting/Donkey-Kong-X-Banjo-Kazooie",
     "github:team-eternity/DoomDemoRegress",
@@ -17057,7 +18353,6 @@
     "github:testdriveupgrade/TDU_rev",
     "github:tetrisgm/RidgeRacerType4Recomp",
     "github:Tetroo/acnl-re",
-    "github:TGP482/BLACK-XBERecomp",
     "github:TGP482/SCDA-XBERecomp",
     "github:thanosba/-TCP-Forward-Server",
     "github:ThatGuyMcd/Glover-R",
@@ -17106,6 +18401,7 @@
     "github:thetheoryofR/Fallout-NV-MacOS",
     "github:thethiny/KHUx-Recomp",
     "github:TheTomBritton/arcade-webport",
+    "github:ThiagoFraga761/-infamous2pc",
     "github:ThiagoLira/trouble-makers-pc-recomp",
     "github:thiagordsfx/thiagordsfx",
     "github:thibautbus/gen1recomp-translation-mod-generator",
@@ -17402,6 +18698,7 @@
     "github:Zoltan45/mktrilogy",
     "github:Zorcher/Zandronum",
     "github:zsrv/goscape-client",
-    "github:Zumbo06/Crash2Recomp"
+    "github:Zumbo06/Crash2Recomp",
+    "github:zxyandreay/azazel6"
   ]
 }
